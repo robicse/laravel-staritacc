@@ -4,7 +4,7 @@
     <main class="app-content">
         <div class="app-title" style="margin-top: 0px">
             <div>
-                <h1><i class=""></i> All Customers </h1>
+                <h1><i class=""></i> All Customers1 </h1>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item"> <a href="{!! route('customer.create') !!}" class="btn btn-sm btn-primary" type="button">Add Customers </a></li>
