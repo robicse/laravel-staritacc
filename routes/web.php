@@ -99,6 +99,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('account/credit-voucher','AccountController@view_credit_voucher')->name('account.credit_voucher');
     Route::get('account/credit-voucher-print/{headcode}/{date_from}/{date_to}','AccountController@credit_voucher_print');
 
+    Route::resource('accounts','AccountController');
+    Route::get('selectedform/{id}','AccountController@selectedform');
+    Route::get('newform/{id}','AccountController@newform');
+    Route::post('insert_coa','AccountController@insert_coa');
+
 
 //relation-data
 
