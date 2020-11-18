@@ -32,6 +32,8 @@
                     <tr>
                         <th width="10%">Date</th>
                         <th width="10%">Description</th>
+                        <th width="10%">Voucher Type</th>
+                        <th width="10%">Voucher NO</th>
                         <th width="12%">Debit</th>
                         <th width="12%">Credit</th>
                         <th width="12%">Balance</th>
@@ -131,6 +133,12 @@
                         <tr>
                             <td>{{ $general_ledger_info->date }}</td>
                             <td>{{ $general_ledger_info->transaction_description }}</td>
+                            <td>{{ $general_ledger_info->transaction_description }}</td>
+                            <td>
+                                @php
+                                    echo \App\VoucherType::where('id',$general_ledger_info->voucher_type_id)->pluck('name')->first();
+                                @endphp
+                            </td>
                             <td>{{ number_format($debit,2,'.',',') }}</td>
                             <td>{{ number_format($credit,2,'.',',') }}</td>
                             <td>{{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}</td>
@@ -151,12 +159,16 @@
                         <tr style="background-color: red">
                             <td>{{ $last_day }}</td>
                             <td>{{ $particulars }}</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                             <td>{{ $sum_credit > $sum_debit ? number_format($PreBalance,2,'.',',') : '' }}</td>
                             <td>{{ $sum_debit > $sum_credit ? number_format($PreBalance,2,'.',',') : '' }}</td>
                             <td>&nbsp;</td>
                         </tr>
                     @endif
                     <tr>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td align="right">Total</td>
 {{--                        <td>{{ number_format($final_debit_credit,2,'.',',') }}</td>--}}

@@ -35,25 +35,13 @@ class TransactionController extends Controller
         $voucherTypes=VoucherType::all();
         $accounts = Account::all();
         $transactions = Transaction::latest()->get();
-        if (empty($transactions->voucher_no)){
-            $transactions->voucher_no = $request->voucher_no+2000 ;
-        }
-        elseif ($transactions->voucher_no == $request->voucher_no){
-            $transactions->voucher_no+=1;
-        }elseif( $transactions->voucher_no)
-        {
-            Toastr::warning('voucher no already exists ');
-//                return back();
 
-        }
-        //dd($transactions);
         return view('backend.posting.create',compact('voucherTypes','accounts','transactions'));
     }
 
 
     public function store(Request $request)
     {
-        //dd($request->all());
         $this->validate($request, [
             'account_id'=> 'required',
         ]);
@@ -70,7 +58,7 @@ class TransactionController extends Controller
         {
             $total_amount += $request->amount[$i];
         }
-        //dd($request->all());
+
         for ($i = 0; $i < $row_count; $i++) {
             $debit = NULL;
             $credit = NULL;
@@ -84,20 +72,10 @@ class TransactionController extends Controller
 
             $account_id = $request->account_id[$i];
             $accounts = Account::where('id',$account_id)->first();
-            //dd($accounts);
-            // Transaction
+
             $transactions = new Transaction();
             $transactions->voucher_type_id = $request->voucher_type_id;
             $transactions->voucher_no = $request->voucher_no ;
-
-
-            //dd($transactions->voucher_no);
-//            if(($total_amount += $request->voucher_no))
-//            {
-//                Toastr::warning('voucher no already exists ', 'Warning');
-//                return back();
-//            }
-
             $transactions->date = $request->date;
             $transactions->account_id = $account_id;
             $transactions->account_name = $accounts->HeadName;
@@ -107,10 +85,7 @@ class TransactionController extends Controller
             $transactions->debit = $debit;
             $transactions->credit = $credit;
             $transactions->transaction_description = $request->transaction_description[$i];
-
-           // dd($transactions);
             $transactions->save();
-
 
         }
         Toastr::success('Posting Created Successfully', 'Success');
@@ -224,11 +199,6 @@ class TransactionController extends Controller
     }
     public function view_general_ledger(Request $request)
     {
-        //dd($request->all());
-//        echo '<pre>';
-//        print_r($request->all());
-//        echo '</pre>';
-
         $general_ledger = $request->general_ledger;
         $date_from = $request->date_from;
         $date_to = $request->date_to;
@@ -276,7 +246,7 @@ class TransactionController extends Controller
                 ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
                 ->where('transactions.account_no',$general_ledger)
                 ->whereBetween('transactions.date', [$date_from, $date_to])
-                ->select('transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
+                ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
                 ->get();
         }else{
             //echo 'noo';exit;
@@ -284,7 +254,7 @@ class TransactionController extends Controller
                 //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
                 ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
                 ->whereBetween('transactions.date', [$date_from, $date_to])
-                ->select('transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
+                ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
                 ->get();
         }
 
@@ -548,19 +518,16 @@ class TransactionController extends Controller
     }
 
     public function getVoucherNo(Request $request){
-
-//        $option = 'hello';
-
         $current_voucher_type_id = $request->current_voucher_type_id;
         $current_voucher_no = DB::table('transactions')
-//            ->where('voucher_type_id',$current_voucher_type_id)
+            ->where('voucher_type_id',$current_voucher_type_id)
             ->latest()
             ->pluck('voucher_no')
             ->first();
         if(!empty($current_voucher_no)){
             $voucher_no = $current_voucher_no + 1;
         }else{
-            $voucher_no = 1000;
+            $voucher_no = 1;
         }
 
         return response()->json(['success'=>true,'data'=>$voucher_no]);
