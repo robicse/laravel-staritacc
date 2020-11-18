@@ -19,7 +19,7 @@ class CreateDuesTable extends Migration
             $table->bigInteger('customer_id')->unsigned();
             $table->string('total_amount')->nullable();
             $table->string('paid_amount')->nullable();
-            $table->string('current_due')->nullable();
+            $table->string('due_amount')->nullable();
             $table->foreign('service_sale_id')->references('id')->on('service_sales')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->timestamps();

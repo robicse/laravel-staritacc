@@ -35,16 +35,6 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="control-label col-md-3 text-right">Status <span style="color: red">*</span></label>
-                            <div class="col-md-8">
-                                <select name="status" id="status" class="form-control">
-                                    <option value="">Select One</option>
-                                    <option value="1" selected>Active</option>
-                                    <option value="0">Inactive</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label class="control-label col-md-3"></label>
                             <div class="col-md-8">
                                 <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Save office Costing Category</button>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Employee;
 use App\ExpenseCategory;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ExpenseCategoryController extends Controller
     }
     public function index()
     {
-        $expenses = ExpenseCategory::orderBy('id','desc')->paginate(5);
+        $expenses = ExpenseCategory::where('delete_status',0)->orderBy('id','desc')->paginate(5);
         return view('backend.expenseCategory.index', compact('expenses'));
     }
 
@@ -39,8 +40,9 @@ class ExpenseCategoryController extends Controller
         $expenses = new ExpenseCategory();
         $expenses->name = $request->name;
         $expenses->slug = Str::slug($request->name);
-        $expenses->status = $request->status;
+        //$expenses->status = $request->status;
         $expenses->save();
+        $insert_id = $expenses->id;
 
         $account = DB::table('accounts')->where('HeadLevel',1)->where('HeadCode', 'like', '4%')->where('PHeadName','Expense')->Orderby('created_at', 'desc')->limit(1)->first();
         if(!empty($account)){
@@ -53,13 +55,14 @@ class ExpenseCategoryController extends Controller
         $HeadType = 'E';
 
         $account = new Account();
+        $account->ref_id        = $insert_id;
         $account->HeadCode      = $headcode;
         $account->HeadName      = $p_acc;
         $account->PHeadName     = 'Expense';
         $account->HeadLevel     = $HeadLevel;
         $account->IsActive      = '1';
         $account->IsTransaction = '1';
-        $account->IsGL          = '0';
+        $account->IsGL          = '1';
         $account->HeadType      = $HeadType;
         $account->CreateBy      = Auth::User()->id;
         $account->UpdateBy      = Auth::User()->id;
@@ -91,7 +94,7 @@ class ExpenseCategoryController extends Controller
         $expenses = ExpenseCategory::find($id);
         $expenses->name = $request->name;
         $expenses->slug = Str::slug($request->name);
-        $expenses->status = $request->status;
+        //$expenses->status = $request->status;
         $expenses->save();
 
         Toastr::success('Office Costing Category Updated Successfully');
@@ -100,7 +103,15 @@ class ExpenseCategoryController extends Controller
 
     public function destroy($id)
     {
-        ExpenseCategory::destroy($id);
+        $expenseCategory = ExpenseCategory::find($id);
+        $expenseCategory->delete_status = 1;
+        $expenseCategory->save();
+
+        $accounts = Account::where('ref_id',$id)->where('HeadType','E')->first();
+        $accounts->IsGL = 0;
+        $accounts->save();
+
+
         Toastr::success('Office Costing Category Deleted Successfully');
         return redirect()->route('expenseCategory.index');
     }

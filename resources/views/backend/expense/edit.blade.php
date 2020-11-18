@@ -32,11 +32,11 @@
                             @csrf
                         <div class="form-group row">
                             <label class="control-label col-md-3 text-right">Expense Category  <small class="requiredCustom">*</small></label>
-                            <div class="col-md-8">
-                                <select name="expense_category_id" id="customer" class="form-control select2" required>
+                            <div class="col-md-5">
+                                <select name="expense_category_id" id="expense_category_id" class="form-control select2" required>
                                     <option value="">Select One</option>
                                     @foreach($officeCostingCategories as $officeCostingCategory)
-                                        <option value="{{$officeCostingCategory->id}}" {{$expense->expense_category_id == $officeCostingCategory->id ? 'selected':''}}>{{$officeCostingCategory->name}} </option>
+                                        <option value="{{$officeCostingCategory->id}}" {{$expense->expense_category_id == $officeCostingCategory->id ? 'selected' : ''}}>{{$officeCostingCategory->name}} </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -45,7 +45,6 @@
                             <label class="control-label col-md-3 text-right">Payment Type  <small class="requiredCustom">*</small></label>
                             <div class="col-md-8">
                                 <select name="payment_type" id="payment_type" class="form-control" required>
-                                    <option value="">Select One</option>
                                     <option value="cash" @if($expense->payment_type == 'cash') selected @endif>cash</option>
                                     <option value="check" @if($expense->payment_type == 'check') selected @endif>check</option>
                                 </select>
@@ -87,47 +86,47 @@
 @push('js')
     <script>
 
-        function modal_customer(){
-            $('#customar_modal').modal('show');
-        }
+//        function modal_customer(){
+//            $('#customar_modal').modal('show');
+//        }
+//
+//        //new customer insert
+//        $("#customer_insert").submit(function(e){
+//            e.preventDefault();
+//            //var customerMess    = $("#customerMess3");
+//            //var customerErrr    = $("#customerErrr3");
+//            $.ajax({
+//                url: $(this).attr('action'),
+//                method: $(this).attr('method'),
+//                dataType: 'json',
+//                data: $(this).serialize(),
+//                beforeSend: function()
+//                {
+//                    //customerMess.removeClass('hide');
+//                    //customerErrr.removeClass('hide');
+//                },
+//                success: function(data)
+//                {
+//                    console.log(data);
+//                    if (data.exception) {
+//                        customerErrr.addClass('alert-danger').removeClass('alert-success').html(data.exception);
+//                    }else{
+//                        $('#customer').append('<option value = "' + data.id + '"  selected> '+ data.name + ' </option>');
+//                        console.log(data.id);
+//                        $("#customar_modal").modal('hide');
+//                    }
+//                },
+//                error: function(xhr)
+//                {
+//                    alert('failed!');
+//                }
+//            });
+//        });
 
-        //new customer insert
-        $("#customer_insert").submit(function(e){
-            e.preventDefault();
-            //var customerMess    = $("#customerMess3");
-            //var customerErrr    = $("#customerErrr3");
-            $.ajax({
-                url: $(this).attr('action'),
-                method: $(this).attr('method'),
-                dataType: 'json',
-                data: $(this).serialize(),
-                beforeSend: function()
-                {
-                    //customerMess.removeClass('hide');
-                    //customerErrr.removeClass('hide');
-                },
-                success: function(data)
-                {
-                    console.log(data);
-                    if (data.exception) {
-                        customerErrr.addClass('alert-danger').removeClass('alert-success').html(data.exception);
-                    }else{
-                        $('#customer').append('<option value = "' + data.id + '"  selected> '+ data.name + ' </option>');
-                        console.log(data.id);
-                        $("#customar_modal").modal('hide');
-                    }
-                },
-                error: function(xhr)
-                {
-                    alert('failed!');
-                }
-            });
-        });
-
-        function hidemodal() {
-            var x = document.getElementById("customar_modal");
-            x.style.display = "none";
-        }
+        // function hidemodal() {
+        //     var x = document.getElementById("customar_modal");
+        //     x.style.display = "none";
+        // }
 
         $(function() {
             <?php

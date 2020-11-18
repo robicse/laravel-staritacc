@@ -18,7 +18,7 @@ class CreateExpenseCategoriesTable extends Migration
             $table->string('name');
             $table->string('slug');
             //$table->enum('type', ['Direct Expenses','Indirect Expenses'])->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('delete_status')->default(0);
             $table->timestamps();
         });
     }

@@ -14,7 +14,7 @@
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('serviceSaleDetails.index') }}" class="btn btn-sm btn-primary col-sm" type="button">All Service Sale </a>
+                    <a href="{{ route('serviceSale.index') }}" class="btn btn-sm btn-primary col-sm" type="button">All Service Sale </a>
                 </li>
             </ul>
         </div>
@@ -27,46 +27,34 @@
                             {{ session('response') }}
                         </div>
                     @endif
-                    <form method="post" action="{{ route('serviceSale.update',$serviceSales->id) }}">
+                    <form class="row" method="post" action="{{ route('serviceSale.update',$serviceSales->id) }}">
                         @csrf
                         @method('PUT')
-                        <table class="table table-striped">
-                            <tr>
-                                <th colspan="5" scope="col">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 text-right">Customers</label>
-                                        <div class="col-md-6">
-                                            <select class="form-control select2 " name="customer_id" required>
-                                                <option value="">Select Customer</option>
-                                                @foreach($customers as $customer)
-                                                    <option value="{{$customer->id}}" {{$customer->id == $serviceSales->customer_id ? 'selected' : ''}}>{{$customer->name}} </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <input type="hidden" name="service_sale_id" id="service_sale_id" class="form-control" >
-                                        <label class="control-label col-md-3 text-right">Payment Type  <small class="requiredCustom">*</small></label>
-                                        <div class="col-md-8">
-                                            <select name="payment_type" id="payment_type" class="form-control" >
-                                                <option value="">Select One</option>
-                                                <option value="cash"  {{'cash' == $serviceSales->payment_type ? 'selected' : ''}}>cash</option>
-                                                <option value="check" {{'check' == $serviceSales->payment_type ? 'selected' : ''}}>check</option>
-                                            </select>
-                                            <span>&nbsp;</span>
-                                            <input type="text" name="check_number" id="check_number" class="form-control" placeholder="Check Number">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 text-right">Date  <small class="requiredCustom">*</small></label>
-                                        <div class="col-md-8">
-                                            <input type="text" name="date" class="datepicker form-control" value="{{date('Y-m-d')}}">
-                                        </div>
-                                    </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-labeltext-right">Customers <small class="requiredCustom">*</small></label>
+                                <select class="form-control select2 " name="customer_id" required>
+                                    <option value="">Select Customer</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{$customer->id}}" {{$customer->id == $serviceSales->customer_id ? 'selected' : ''}}>{{$customer->name}} </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <input type="hidden" name="service_sale_id" id="service_sale_id" value="{{$serviceSales->id}}" class="form-control" >
+                                <label class="control-label text-right">Payment Type  <small class="requiredCustom">*</small></label>
+                                <select name="payment_type" id="payment_type" class="form-control" >
+                                    <option value="">Select One</option>
+                                    <option value="cash"  {{'cash' == $serviceSales->payment_type ? 'selected' : ''}}>cash</option>
+                                    <option value="check" {{'check' == $serviceSales->payment_type ? 'selected' : ''}}>check</option>
+                                </select>
+                                <span>&nbsp;</span>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label text-right">Date  <small class="requiredCustom">*</small></label>
+                                <input type="text" name="date" class="datepicker form-control" value="{{date('Y-m-d')}}">
+                            </div>
 
-                                </th>
-                            </tr>
-                        </table>
+
                         <input type="button" class="btn btn-primary add " style="margin-left: 804px;" value="Add More Product">
                         <table class="table table-striped">
                             <thead>
@@ -76,6 +64,7 @@
                                 <th>Qty <small class="requiredCustom">*</small></th>
                                 <th>Price <small class="requiredCustom">*</small></th>
                                 <th>Unit <small class="requiredCustom">*</small></th>
+                                <th>Vat</th>
                                 <th>Sub Total</th>
                                 <th>Action</th>
 
@@ -86,6 +75,7 @@
                             <tr>
                                 <td width="5%" class="no">1</td>
                                 <td>
+                                    <input type="hidden" name="service_sale_detail_id[]" id="service_sale_id" value="{{$serviceSalesDetail->id}}" class="form-control" >
                                     <select class="form-control service_id select2" name="service_id[]"  required>
                                         <option value="">Select  Product</option>
                                         @foreach($services as $service)
@@ -108,6 +98,9 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="text" class="vat form-control" name="vat[]" value="{{$serviceSalesDetail->vat}}">
+                                </td>
+                                <td>
                                     <input type="text" class="amount form-control" name="sub_total[]" value="{{$serviceSalesDetail->sub_total}}">
                                 </td>
                             </tr>
@@ -128,7 +121,7 @@
                                 </th>
                                 <th colspan="2">
                                     Due Amount:
-                                    <input type="text" id="due_amount" class="backmoney form-control" name="current_due" value="{{$serviceSales->due_amount}}">
+                                    <input type="text" id="due_amount" class="backmoney form-control" name="due_amount" value="{{$serviceSales->due_amount}}">
                                 </th>
                             </tr>
                             </tfoot>
@@ -176,6 +169,7 @@
                     '<td><input type="number" min="1" max="" class="qty form-control" name="qty[]" required></td>' +
                     '<td><input type="text" min="1" max="" class="price form-control" name="price[]" value="" required></td>' +
                     '<td><select class="form-control service_unit_id select2" name="service_unit_id[]" id="service_unit_id_'+n+'" onchange="getval('+n+',this);" required>' + unit + '</select></td>' +
+                    '<td><input type="text" class="vat form-control" name="vat[]" required></td>' +
                     '<td><input type="text" class="amount form-control" name="sub_total[]" required></td>' +
                     '<td><input type="button" class="btn btn-danger delete" value="x"></td></tr>';
 
@@ -195,8 +189,9 @@
                 var tr = $(this).parent().parent();
                 var qty = tr.find('.qty').val() - 0;
                 var price = tr.find('.price').val() - 0;
+                var vat = tr.find('.vat').val() - 0;
 
-                var total = (qty * price);
+                var total = ((qty * price)+vat);
 
                 tr.find('.amount').val(total);
                 totalAmount();

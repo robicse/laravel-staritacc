@@ -25,7 +25,7 @@ class ServiceSaleController extends Controller
 
     public function index()
     {
-        $serviceSales = ServiceSale::all();
+        $serviceSales = ServiceSale::latest()->get();
         //dd($serviceSales);
         return view('backend.serviceSale.index',compact('serviceSales'));
     }
@@ -73,6 +73,7 @@ class ServiceSaleController extends Controller
                 $serviceSaleDetails->service_unit_id = $service_unit_id;
                 $serviceSaleDetails->service_id = $request->service_id[$i];
                 $serviceSaleDetails->qty = $request->qty[$i];
+                $serviceSaleDetails->vat = $request->vat[$i];
                 $serviceSaleDetails->price = $request->price[$i];
                 $serviceSaleDetails->sub_total =$request->qty[$i]*$request->price[$i];
                 //dd($serviceSaleDetails);
@@ -87,7 +88,7 @@ class ServiceSaleController extends Controller
             $due->service_sale_id = $insert_id;
             $due->customer_id = $request->customer_id;
             $due->paid_amount = $request->paid_amount;
-            $due->current_due = $request->current_due;
+            $due->due_amount = $request->due_amount;
             $due->save();
 
         }
@@ -105,7 +106,6 @@ class ServiceSaleController extends Controller
 
         return view('backend.serviceSale.show',compact('customers','services','serviceSales','serviceSalesDetails'));
     }
-
 
     public function edit($id)
     {
@@ -139,37 +139,43 @@ class ServiceSaleController extends Controller
         $serviceSales->total_amount =$request->total_amount;
         $serviceSales->paid_amount =$request->paid_amount;
         $serviceSales->due_amount =$request->due_amount;
+        //dd($serviceSales);
         $serviceSales->update();
-        $insert_id = $serviceSales->id;
-        if($insert_id) {
-            for ($i = 0; $i < $row_count; $i++) {
-                // service sales details
-                $serviceSaleDetails_id = $request->service_sale_detail_id[$i];
-                //dd($serviceSaleDetails_id);
-                $serviceSaleDetails = ServiceSaleDetail::find($serviceSaleDetails_id);
-                //dd($serviceSaleDetails);
-                $serviceSaleDetails->service_sale_id = $insert_id;
-                $serviceSaleDetails->service_id = $request->service_id[$i];
-                $serviceSaleDetails->service_unit_id = $request->service_unit_id[$i];
-                $serviceSaleDetails->qty = $request->qty[$i];
-                $serviceSaleDetails->unit = $request->unit[$i];
-                $serviceSaleDetails->price = $request->price[$i];
-                $serviceSaleDetails->sub_total =$request->qty[$i]*$request->price[$i];
-                $serviceSaleDetails->update();
+
+        //echo $request->service_sale_id;
+        //exit;
 
 
-            }
+        for ($i = 0; $i < $row_count; $i++) {
+            //dd($request->service_id[$i]);
+            // service sales details
 
-            // due
-            $due = Due::where('service_sale_id',$id);
-            $due->total_amount = $total_amount;
-            $due->service_sale_id = $insert_id;
-            $due->customer_id = $request->customer_id;
-            $due->paid_amount = $request->paid_amount;
-            $due->current_due = $request->current_due;
-            $due->update();
+            $service_unit_id = Service::where('id', $request->service_id[$i])->pluck('service_unit_id')->first();
 
+            $serviceSaleDetails_id = $request->service_sale_detail_id[$i];
+            $serviceSaleDetails = ServiceSaleDetail::find($serviceSaleDetails_id);
+            $serviceSaleDetails->service_id = $request->service_id[$i];
+            $serviceSaleDetails->service_unit_id = $request->service_unit_id[$i];
+            $serviceSaleDetails->qty = $request->qty[$i];
+            $serviceSaleDetails->unit = $service_unit_id;
+            $serviceSaleDetails->vat = $request->vat[$i];
+            $serviceSaleDetails->price = $request->price[$i];
+            $serviceSaleDetails->sub_total =$request->qty[$i]*$request->price[$i];
+            //dd($serviceSaleDetails);
+            $serviceSaleDetails->update();
         }
+
+        // due
+        $due = Due::where('service_sale_id',$id)->latest()->first();
+        //dd($due);
+        $due->total_amount = $total_amount;
+        //$due->service_sale_id = $insert_id;
+        $due->customer_id = $request->customer_id;
+        $due->paid_amount = $request->paid_amount;
+        $due->due_amount = $request->due_amount;
+        $due->update();
+
+
         return redirect()->route('serviceSale.index');
     }
 
@@ -204,6 +210,46 @@ class ServiceSaleController extends Controller
         ];
 
         return response()->json(['success'=>true,'data'=>$option]);
+    }
+    public function payDue(Request $request)
+    {
+        //dd($request->all());
+
+        $serviceSale_id = $request->service_sale_id;
+        $serviceSale = ServiceSale::find($serviceSale_id);
+        $total_amount=$serviceSale->total_amount;
+        //dd($total_amount);
+        $paid_amount=$serviceSale->paid_amount;
+
+        $serviceSale->paid_amount=$paid_amount+$request->new_paid;
+        $serviceSale->due_amount=$total_amount-($paid_amount+$request->new_paid);
+        $serviceSale->update();
+
+        $due = new Due();
+        $due->customer_id = $serviceSale->customer_id;
+        $due->service_sale_id = $request->service_sale_id;
+        $due->total_amount=$serviceSale->total_amount;
+        $due->paid_amount=$request->new_paid;
+        $due->due_amount=$total_amount-($paid_amount+$request->new_paid);
+        //dd($due);
+        $due->save();
+
+        Toastr::success('Due Pay Successfully', 'Success');
+        return redirect()->back();
+
+    }
+
+    public function dueList()
+    {
+        //dd('ss');
+        $auth_user_id = Auth::user()->id;
+        $auth_user = Auth::user()->roles[0]->name;
+        if($auth_user == "Admin"){
+            $serviceSales = ServiceSale::where('due_amount','>',0)->latest()->get();
+        }else{
+            $serviceSales = ServiceSale::where('user_id',$auth_user_id)->where('due_amount','>',0)->get();
+        }
+        return view('backend.serviceSale.dueList',compact('serviceSales'));
     }
 
 }

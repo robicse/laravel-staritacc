@@ -22,6 +22,7 @@
                         <th>Employee name</th>
                         <th>Month</th>
                         <th>Year</th>
+                        <th>Net Payable Salary</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -32,6 +33,7 @@
                         <td>{{ $employeeSalary->employee->name}}</td>
                         <td>{{ $employeeSalary->month}}</td>
                         <td>{{ $employeeSalary->year}}</td>
+                        <td>{{ $employeeSalary->net_payable_salary}}</td>
                         <td>
 {{--                            <a href="{{ route('expenses.show',$expense->id) }}" class="btn btn-sm btn-info float-left">Show</a>--}}
                             <a href="{{ route('employee-salary.edit',$employeeSalary->id) }}" class="btn btn-sm btn-primary float-left"><i class="fa fa-edit"></i></a>
@@ -47,7 +49,6 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-{{--                {{ $parties->links() }}--}}
             </div>
 
         </div>

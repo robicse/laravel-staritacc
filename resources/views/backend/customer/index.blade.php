@@ -17,7 +17,7 @@
                     <thead>
                     <tr>
                         <th width="5%">#Id</th>
-                        <th width="10%">Name</th>
+                        <th width="10%">Company Name</th>
                         <th width="10%">Email</th>
                         <th width="10%">Phone</th>
                         <th width="10%">Address</th>
@@ -46,7 +46,6 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-{{--                {{ $custmers->links() }}--}}
             </div>
 
         </div>

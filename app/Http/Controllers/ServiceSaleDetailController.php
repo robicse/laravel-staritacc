@@ -12,7 +12,7 @@ class ServiceSaleDetailController extends Controller
 
     public function index()
     {
-        $serviceSaleDetails = ServiceSaleDetail::all();
+        $serviceSaleDetails = ServiceSaleDetail::latest()->get();
         //dd($serviceSaleDetails);
         return view('backend.serviceSaleDetails.index',compact('serviceSaleDetails'));
     }

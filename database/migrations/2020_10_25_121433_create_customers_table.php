@@ -20,7 +20,7 @@ class CreateCustomersTable extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->integer('status')->default(0);
-            $table->integer('delete_status')->default(1);
+            $table->integer('delete_status')->default(0);
             $table->text('address')->nullable();
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();

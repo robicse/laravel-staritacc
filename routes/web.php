@@ -46,6 +46,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['auth']], function() {
     Route::resource('roles','RoleController');
     Route::resource('users','UserController');
+    Route::get('change-password/{id}','UserController@headerChangedPassword')->name('password.change_password');
+
+    Route::get('change-password/{id}','UserController@changedPassword')->name('password.change_password');
+    Route::post ('change-password-update','UserController@changedPasswordUpdated')->name('password.change_password_update');
 //    Route::resource('stores','StoreController');
     Route::resource('serviceSubCategory','ServiceSubCategoryController');
     Route::resource('serviceCategory','ServiceCategoryController');
@@ -56,6 +60,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('expenseCategory','ExpenseCategoryController');
     Route::resource('expenses','ExpenseController');
     Route::resource('serviceSale','ServiceSaleController');
+
+    Route::get('dueList','ServiceSaleController@dueList')->name('dueList');
+
     Route::resource('serviceSaleDetails','ServiceSaleDetailController');
 
     Route::resource('employee','EmployeeController');
@@ -64,6 +71,8 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('voucherType','VoucherTypeController');
     Route::resource('transaction','TransactionController');
+
+    Route::post('pay-due','ServiceSaleController@payDue')->name('pay.due');
 
     Route::get('account/coa_print','AccountController@coa_print')->name('account.coa_print');
     Route::get('account/cashbook','AccountController@cash_book_form');

@@ -43,7 +43,6 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-{{--                {{ $officeCostingCategories->links() }}--}}
             </div>
 
         </div>

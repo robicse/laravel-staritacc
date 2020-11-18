@@ -1,26 +1,6 @@
 @extends('backend._partial.dashboard')
 @push('css')
-{{--    <style>--}}
-{{--        @media screen {--}}
-{{--            #printSection {--}}
-{{--                display: none;--}}
-{{--            }--}}
-{{--        }--}}
 
-{{--        @media print {--}}
-{{--            body * {--}}
-{{--                visibility:hidden;--}}
-{{--            }--}}
-{{--            #printSection, #printSection * {--}}
-{{--                visibility:visible;--}}
-{{--            }--}}
-{{--            #printSection {--}}
-{{--                position:absolute;--}}
-{{--                left:0;--}}
-{{--                top:0;--}}
-{{--            }--}}
-{{--        }--}}
-{{--    </style>--}}
 @endpush
 @section('content')
     <main class="app-content">
@@ -138,7 +118,6 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-{{--                {{ $parties->links() }}--}}
             </div>
 
         </div>

@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
+use App\Due;
+use App\Employee;
+use App\Expense;
+use App\Service;
+use App\ServiceSale;
 use App\Store;
 use Illuminate\Http\Request;
 use DB;
@@ -28,7 +34,11 @@ class HomeController extends Controller
 
 
 //        $stores = Store::all();
-
-        return view('backend._partial.home');
+        $customer = Customer::all()->count();
+        $due = ServiceSale::where('due_amount','>',0)->get()->count();
+        $expense = Expense::all()->count();
+        $employeeList = Employee::all()->count();
+        $service = Service::all()->count();
+        return view('backend._partial.home',compact('customer','due','employeeList','expense','service'));
     }
 }

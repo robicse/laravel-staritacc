@@ -41,7 +41,6 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-{{--                {{ $parties->links() }}--}}
             </div>
 
         </div>

@@ -145,7 +145,14 @@ class AccountController extends Controller
 
 
     public function debit_voucher_form(){
-        $general_ledger_account_nos = DB::table('accounts')->where('HeadCode','LIKE','501%')->Orderby('HeadName', 'asc')->get();
+        $general_ledger_account_nos = DB::table('accounts')
+            ->where('IsGL','1')
+            ->where(function ($query) {
+                $query->where('HeadCode','LIKE','501%')
+                ->orWhere('HeadCode','LIKE','40%');
+            })
+            ->Orderby('HeadName', 'asc')
+            ->get();
         //dd($accounts);
 
         return view('backend.account.debit_voucher_form', compact('general_ledger_account_nos'));
@@ -253,7 +260,11 @@ class AccountController extends Controller
 
 
     public function credit_voucher_form(){
-        $general_ledger_account_nos = DB::table('accounts')->where('HeadCode','LIKE','10103%')->Orderby('HeadName', 'asc')->get();
+        $general_ledger_account_nos = DB::table('accounts')
+                ->where('IsGL','1')
+            ->where('HeadCode','LIKE','10103%')
+            ->Orderby('HeadName', 'asc')
+            ->get();
         //dd($accounts);
 
         return view('backend.account.credit_voucher_form', compact('general_ledger_account_nos'));

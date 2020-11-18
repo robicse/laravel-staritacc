@@ -22,6 +22,7 @@ class CreateEmployeesTable extends Migration
             $table->string('gross_salary')->nullable();
             $table->string('basic_salary')->nullable();
             $table->string('per_day_salary')->nullable();
+            $table->integer('delete_status')->default(0);
             $table->timestamps();
         });
     }

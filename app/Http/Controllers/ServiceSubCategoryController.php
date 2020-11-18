@@ -78,6 +78,8 @@ class ServiceSubCategoryController extends Controller
 
     public function destroy($id)
     {
-        //
+        ServiceSubCategory::destroy($id);
+        Toastr::success('Service SubCategory Updated Successfully', 'Success');
+        return redirect()->route('serviceSubCategory.index');
     }
 }

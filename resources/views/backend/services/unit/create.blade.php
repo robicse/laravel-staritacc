@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-12">
             <div class="tile">
-                <h3 class="tile-title">Add Service Category</h3>
+                <h3 class="tile-title">Add Service Unit</h3>
                 <div class="tile-body tile-footer">
                     @if(session('response'))
                         <div class="alert alert-success">

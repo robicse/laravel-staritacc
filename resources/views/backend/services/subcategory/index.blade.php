@@ -40,7 +40,7 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-                {{ $subCategories->links() }}
+
             </div>
 
         </div>

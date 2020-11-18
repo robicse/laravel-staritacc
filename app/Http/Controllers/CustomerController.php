@@ -23,7 +23,7 @@ class CustomerController extends Controller
 
     public function index()
     {
-        $custmers = Customer::where('status',0)->get();
+        $custmers = Customer::where('status',0)->where('delete_status',0)->latest()->get();
         return view('backend.customer.index',compact('custmers'));
     }
 
@@ -72,7 +72,7 @@ class CustomerController extends Controller
         $account->HeadLevel     = $HeadLevel;
         $account->IsActive      = '1';
         $account->IsTransaction = '1';
-        $account->IsGL          = '0';
+        $account->IsGL          = '1';
         $account->HeadType      = $HeadType;
         $account->CreateBy      = Auth::User()->id;
         $account->UpdateBy      = Auth::User()->id;
@@ -123,6 +123,11 @@ class CustomerController extends Controller
         $custmers = Customer::find($id);
         $custmers->delete_status = 1;
         $custmers->save();
+
+        $accounts = Account::where('ref_id',$id)->where('HeadType','A')->first();
+        $accounts->IsGL = 0;
+        $accounts->save();
+
         Toastr::success('Customer Deleted Successfully','Success');
         return  redirect()->route("customer.index");
     }

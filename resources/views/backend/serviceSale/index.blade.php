@@ -35,9 +35,13 @@
                         <td>{{ $serviceSale->payment_type}}</td>
                         <td>{{ $serviceSale->total_amount}}</td>
                         <td>{{ $serviceSale->paid_amount}}</td>
-{{--                        <td>{{ $serviceSale->due->current_due}}</td>--}}
+                        <td>{{ $serviceSale->due_amount}}
+                            @if($serviceSale->total_amount != $serviceSale->paid_amount)
+                                <a href="" class="btn btn-warning btn-sm mx-1" data-toggle="modal" data-target="#exampleModal-<?= $serviceSale->id;?>"> Pay Due</a>
+                            @endif
+                        </td>
 {{--                        @dd( $serviceSale->due->current_due);--}}
-{{--@dd($serviceSaleDetail->service->name);--}}
+
                         <td>
                             <a href="{{ route('serviceSale.show',$serviceSale->id) }}" class="btn btn-sm btn-primary float-left" >show</a>
                             <a href="{{ route('serviceSale.edit',$serviceSale->id) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
@@ -48,12 +52,62 @@
                             </form>
                         </td>
                     </tr>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal-{{$serviceSale->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Pay Due</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{route('pay.due')}}" method="post">
+                                        @csrf
+                                        <div class="form-group">
+                                            <label for="due">Enter Due Amount</label>
+                                            <input type="hidden" class="form-control" name="service_sale_id" value="{{$serviceSale->id}}">
+                                            <input type="number" class="form-control" id="due" aria-describedby="emailHelp" name="new_paid" min="" max="{{$serviceSale->due_amount}}" placeholder="Enter Amount">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="payment_type">Payment Type</label>
+                                            <select name="payment_type" id="payment_type" class="form-control" required>
+                                                <option value="">Select One</option>
+                                                <option value="cash">cash</option>
+                                                <option value="check">check</option>
+                                            </select>
+                                            <span>&nbsp;</span>
+                                            <input type="text" name="check_number" id="check_number" class="form-control" placeholder="Check Number">
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            @push('js')
+                                <script>
+                                    $(function() {
+                                        $('#check_number').hide();
+                                        $('#payment_type').change(function(){
+                                            if($('#payment_type').val() == 'check') {
+                                                $('#check_number').show();
+                                            } else {
+                                                $('#check_number').val('');
+                                                $('#check_number').hide();
+                                            }
+                                        });
+                                    });
+                                </script>
+                            @endpush
+                        </div>
+                    </div>
                         @endforeach
                     </tbody>
                 </table>
                 <div class="tile-footer">
                 </div>
-{{--                {{ $parties->links() }}--}}
             </div>
 
         </div>

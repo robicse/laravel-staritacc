@@ -138,11 +138,11 @@ class EmployeeSalaryController extends Controller
             ->where('id',$employee_id)
             ->pluck('employees.gross_salary')
             ->first();
-        $grossSalary = DB::table('employees')
+        $basic_salary = DB::table('employees')
             ->where('id',$employee_id)
             ->pluck('employees.basic_salary')
             ->first();
-        $grossSalary = DB::table('employees')
+        $per_day_salary = DB::table('employees')
             ->where('id',$employee_id)
             ->pluck('employees.per_day_salary')
             ->first();
@@ -151,8 +151,8 @@ class EmployeeSalaryController extends Controller
             'current_row' => $current_row,
             'designation' => $designation,
             'gross_salary' => $grossSalary,
-            'basic_salary' => $grossSalary,
-            'per_day_salary' => $grossSalary,
+            'basic_salary' => $basic_salary,
+            'per_day_salary' => $per_day_salary,
         ];
 
         return response()->json(['success'=>true,'data'=>$option]);

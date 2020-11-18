@@ -22,7 +22,7 @@ class ServiceProviderController extends Controller
     }
     public function index()
     {
-        $serviceProviders = ServiceProvider::where('delete_status',0)->get();
+        $serviceProviders = ServiceProvider::where('delete_status',0)->latest()->get();
         //dd($serviceProviders);
         return view('backend.service-provider.index',compact('serviceProviders'));
     }

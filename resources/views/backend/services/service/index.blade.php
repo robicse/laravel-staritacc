@@ -42,7 +42,6 @@
                 </table>
                 <div class="tile-footer">
                 </div>
-                {{ $services->links() }}
             </div>
 
         </div>

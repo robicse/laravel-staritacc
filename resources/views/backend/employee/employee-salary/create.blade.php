@@ -1,6 +1,6 @@
 @extends('backend._partial.dashboard')
 <style>
-    .requiredCustom{
+    .Custom{
         font-size: 20px;
         color: red;
         margin-top: 20px;
@@ -22,10 +22,10 @@
             <div class="tile">
                 <h3 class="tile-title">Add Employee Salary</h3>
                 <div class="tile-body">
-                        <form  class="row" method="post" action="{{ route('employee-salary.store') }}">
-                            @csrf
+                    <form  class="row" method="post" action="{{ route('employee-salary.store') }}">
+                        @csrf
                         <div class="form-group col-md-3">
-                            <label class="control-label">Employee Name </label>
+                            <label class="control-label">Employee Name <span style="color: red">*</span></label>
                             <select name="employee_id" id="employee_id" class="form-control select2" onchange="getval(1,this);" required>
                                 <option value="">Select One</option>
                                 @foreach($employees as $employee)
@@ -50,7 +50,7 @@
                             <input type="text" name="per_day_salary" id="per_day_salary" class="form-control" placeholder="Per Day Salary" readonly>
                         </div>
                         <div class="form-group col-md-3">
-                            <label class="control-label">Month</label>
+                            <label class="control-label">Month <span style="color: red">*</span></label>
                             <select name="month" id="month" class="form-control select2" required>
                                 <option value="">Select One</option>
                                 <option value="January"> January</option>
@@ -68,7 +68,7 @@
                             </select>
                         </div>
                         <div class="form-group col-md-3">
-                            <label class="control-label">Year</label>
+                            <label class="control-label">Year <span style="color: red">*</span></label>
                             <select name="year" id="year" class="form-control select2" required>
                                 <option value="">Select One</option>
                                 <option value="2010"> 2010</option>
@@ -101,51 +101,51 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">OT Hour</label>
-                            <input type="text" class=" form-control" name="OT_hour" placeholder="OT Hour" value="" required >
+                            <input type="text" class=" form-control" name="OT_hour" placeholder="OT Hour" value="" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">OT Rate</label>
-                            <input type="text"  class=" form-control" name="OT_rate" value="" required  placeholder="OT Rate">
+                            <input type="text"  class=" form-control" name="OT_rate" value=""   placeholder="OT Rate" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Total Over Time</label>
-                            <input type="text"  class=" form-control" name="total_over_time" value=""  placeholder="Total Over Time" required >
+                            <input type="text"  class=" form-control" name="total_over_time" value=""  placeholder="Total Over Time" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Attendence Bonus</label>
-                            <input type="text"  class=" form-control" name="attendance_bonus" value="" placeholder="Attendence Bonus" required >
+                            <input type="text"  class=" form-control" name="attendance_bonus" value="" placeholder="Attendence Bonus" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Tips</label>
-                            <input type="text" class="form-control" id="tips" name="tips" placeholder="Tips" required>
+                            <input type="text" class="form-control" id="tips" name="tips" placeholder="Tips" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Total Salary</label>
-                            <input type="text" class=" form-control" name="total_salary"  placeholder="Total Salary" required>
+                            <input type="text" class=" form-control" name="total_salary"  placeholder="Total Salary" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Advance Salary</label>
-                            <input type="text" class=" form-control" name="advance_salary" value="" placeholder="Advance Salary" required >
+                            <input type="text" class=" form-control" name="advance_salary" value="" placeholder="Advance Salary" />
                         </div>
-                            <div class="form-group col-md-3">
-                                <label class="control-label">Uniform Value</label>
-                                <input type="text"  class=" form-control" name="uniform_value" value="" placeholder="Uniform Value"  required >
-                            </div>
+                        <div class="form-group col-md-3">
+                            <label class="control-label">Uniform Value</label>
+                            <input type="text"  class=" form-control" name="uniform_value" value="" placeholder="Uniform Value" />
+                        </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Uniform Advance</label>
-                            <input type="text" class=" form-control" name="uniform_advance" value="" placeholder="Uniform Advance"  required >
+                            <input type="text" class=" form-control" name="uniform_advance" value="" placeholder="Uniform Advance" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Uniform Deduction</label>
-                            <input type="text"  class=" form-control" name="uniform_deduction" value="" placeholder="Uniform Deduction"  required >
+                            <input type="text"  class=" form-control" name="uniform_deduction" value="" placeholder="Uniform Deduction" />
                         </div>
                         <div class="form-group col-md-3">
                             <label class="control-label">Due Salary</label>
-                            <input type="text" class="form-control" id="service_unit_id_1" name="due_salary" placeholder="Due Salary"  required>
+                            <input type="text" class="form-control" id="service_unit_id_1" name="due_salary" placeholder="Due Salary" />
                         </div>
                         <div class="form-group col-md-3">
-                            <label class="control-label">Net Payable Salary</label>
-                            <input type="text" class="amount form-control" name="net_payable_salary" placeholder="Net Payable Salary"  required>
+                            <label class="control-label">Net Payable Salary <span style="color: red">*</span></label>
+                            <input type="text" class="amount form-control" name="net_payable_salary" placeholder="Net Payable Salary" required />
                         </div>
                         <div class="form-group col-md-4 align-self-end">
                             <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Save Employee Salary</button>

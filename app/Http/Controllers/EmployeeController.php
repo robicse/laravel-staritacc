@@ -20,7 +20,7 @@ class EmployeeController extends Controller
     }
     public function index()
     {
-        $employees = Employee::latest()->get();
+        $employees = Employee::where('delete_status',0)->latest()->get();
         return view('backend.employee.employee-list.index',compact('employees'));
     }
 
@@ -45,6 +45,7 @@ class EmployeeController extends Controller
         $employees->basic_salary = $request->basic_salary;
         $employees->per_day_salary = $request->per_day_salary;
         $employees->save();
+        $insert_id = $employees->id;
 
         $account = DB::table('accounts')->where('HeadLevel',2)->where('HeadCode', 'like', '501%')->Orderby('created_at', 'desc')->limit(1)->first();
         //dd($account);
@@ -63,13 +64,14 @@ class EmployeeController extends Controller
         $HeadLevel = 2;
         $HeadType = 'L';
         $account = new Account;
+        $account->ref_id        = $insert_id;
         $account->HeadCode      = $headcode;
         $account->HeadName      = $p_acc;
         $account->PHeadName     = $PHeadName;
         $account->HeadLevel     = $HeadLevel;
         $account->IsActive      = '1';
         $account->IsTransaction = '1';
-        $account->IsGL          = '0';
+        $account->IsGL          = '1';
         $account->HeadType      = $HeadType;
         $account->CreateBy      = Auth::User()->id;
         $account->UpdateBy      = Auth::User()->id;
@@ -114,7 +116,13 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $employees = Employee::find($id);
-        $employees->delete();
+        $employees->delete_status = 1;
+        $employees->save();
+
+        $accounts = Account::where('ref_id',$id)->where('HeadType','L')->first();
+        $accounts->IsGL = 0;
+        $accounts->save();
+
         Toastr::success('Employee Deleted Successfully');
         return redirect()->route('employee.index');
     }
