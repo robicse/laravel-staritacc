@@ -47,35 +47,36 @@ class EmployeeController extends Controller
         $employees->save();
         $insert_id = $employees->id;
 
-        $account = DB::table('accounts')->where('HeadLevel',2)->where('HeadCode', 'like', '501%')->Orderby('created_at', 'desc')->limit(1)->first();
-        //dd($account);
-        if(!empty($account)){
-            $headcode=$account->HeadCode+1;
-            //$p_acc = $headcode ."-".$request->name;
+//        $account = DB::table('accounts')->where('HeadLevel',2)->where('HeadCode', 'like', '501%')->Orderby('created_at', 'desc')->limit(1)->first();
+//        //dd($account);
+//        if(!empty($account)){
+//            $headcode=$account->HeadCode+1;
+//            //$p_acc = $headcode ."-".$request->name;
+//
+//        }
+//        else{
+//            $headcode="50101";
+//            //$p_acc = $headcode ."-".$request->name;
+//        }
+//        $p_acc = $request->name;
+//
+//        $PHeadName = 'Account Payable';
+//        $HeadLevel = 2;
+//        $HeadType = 'L';
+//        $account = new Account;
+//        $account->ref_id        = $insert_id;
+//        $account->HeadCode      = $headcode;
+//        $account->HeadName      = $p_acc;
+//        $account->PHeadName     = $PHeadName;
+//        $account->HeadLevel     = $HeadLevel;
+//        $account->IsActive      = '1';
+//        $account->IsTransaction = '1';
+//        $account->IsGL          = '1';
+//        $account->HeadType      = $HeadType;
+//        $account->CreateBy      = Auth::User()->id;
+//        $account->UpdateBy      = Auth::User()->id;
+//        $account->save();
 
-        }
-        else{
-            $headcode="50101";
-            //$p_acc = $headcode ."-".$request->name;
-        }
-        $p_acc = $request->name;
-
-        $PHeadName = 'Account Payable';
-        $HeadLevel = 2;
-        $HeadType = 'L';
-        $account = new Account;
-        $account->ref_id        = $insert_id;
-        $account->HeadCode      = $headcode;
-        $account->HeadName      = $p_acc;
-        $account->PHeadName     = $PHeadName;
-        $account->HeadLevel     = $HeadLevel;
-        $account->IsActive      = '1';
-        $account->IsTransaction = '1';
-        $account->IsGL          = '1';
-        $account->HeadType      = $HeadType;
-        $account->CreateBy      = Auth::User()->id;
-        $account->UpdateBy      = Auth::User()->id;
-        $account->save();
         Toastr::success('EmployeeCreated Successfully');
         return redirect()->route('employee.index');
     }

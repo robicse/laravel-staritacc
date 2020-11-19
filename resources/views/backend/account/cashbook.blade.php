@@ -55,6 +55,8 @@
                         <tr>
                             <th width="10%">Date</th>
                             <th width="30%">Description</th>
+                            <th width="10%">Voucher Type</th>
+                            <th width="10%">Voucher NO</th>
                             <th width="10%">Debit</th>
                             <th width="10%">Credit</th>
                             <th width="10%">Balance</th>
@@ -159,6 +161,12 @@
                                 <tr>
                                     <td>{{ $cash_data_result->date }}</td>
                                     <td>{{ $cash_data_result->transaction_description }}</td>
+                                    <td>
+                                        @php
+                                            echo \App\VoucherType::where('id',$cash_data_result->voucher_type_id)->pluck('name')->first();
+                                        @endphp
+                                    </td>
+                                    <td>{{ $cash_data_result->voucher_no }}</td>
                                     <td>{{ number_format($debit,2,'.',',') }}</td>
                                     <td>{{ number_format($credit,2,'.',',') }}</td>
                                     <td>
@@ -183,12 +191,16 @@
                             <tr style="background-color: red;">
                                 <td>{{ $last_day }}</td>
                                 <td>{{ $particulars }}</td>
+                                <td>{{ $particulars }}</td>
                                 <td>{{ $sum_credit > $sum_debit ? number_format($PreBalance,2,'.',',') : '' }}</td>
                                 <td>{{ $sum_debit > $sum_credit ? number_format($PreBalance,2,'.',',') : '' }}</td>
+                                <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                             </tr>
                         @endif
                         <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td style="float: right">Total</td>
                             <td>{{ number_format($sum_debit,2,'.',',') }}</td>

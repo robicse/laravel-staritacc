@@ -44,30 +44,30 @@ class ExpenseCategoryController extends Controller
         $expenses->save();
         $insert_id = $expenses->id;
 
-        $account = DB::table('accounts')->where('HeadLevel',1)->where('HeadCode', 'like', '4%')->where('PHeadName','Expense')->Orderby('created_at', 'desc')->limit(1)->first();
-        if(!empty($account)){
-            $headcode=$account->HeadCode+1;
-        }else{
-            $headcode="401";
-        }
-        $p_acc = $request->name;
-        $HeadLevel = 1;
-        $HeadType = 'E';
-
-        $account = new Account();
-        $account->ref_id        = $insert_id;
-        $account->HeadCode      = $headcode;
-        $account->HeadName      = $p_acc;
-        $account->PHeadName     = 'Expense';
-        $account->HeadLevel     = $HeadLevel;
-        $account->IsActive      = '1';
-        $account->IsTransaction = '1';
-        $account->IsGL          = '1';
-        $account->HeadType      = $HeadType;
-        $account->CreateBy      = Auth::User()->id;
-        $account->UpdateBy      = Auth::User()->id;
-        //dd($account);
-        $account->save();
+//        $account = DB::table('accounts')->where('HeadLevel',1)->where('HeadCode', 'like', '4%')->where('PHeadName','Expense')->Orderby('created_at', 'desc')->limit(1)->first();
+//        if(!empty($account)){
+//            $headcode=$account->HeadCode+1;
+//        }else{
+//            $headcode="401";
+//        }
+//        $p_acc = $request->name;
+//        $HeadLevel = 1;
+//        $HeadType = 'E';
+//
+//        $account = new Account();
+//        $account->ref_id        = $insert_id;
+//        $account->HeadCode      = $headcode;
+//        $account->HeadName      = $p_acc;
+//        $account->PHeadName     = 'Expense';
+//        $account->HeadLevel     = $HeadLevel;
+//        $account->IsActive      = '1';
+//        $account->IsTransaction = '1';
+//        $account->IsGL          = '1';
+//        $account->HeadType      = $HeadType;
+//        $account->CreateBy      = Auth::User()->id;
+//        $account->UpdateBy      = Auth::User()->id;
+//        //dd($account);
+//        $account->save();
 
         Toastr::success('Expense Category Created Successfully');
         return redirect()->route('expenseCategory.index');

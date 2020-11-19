@@ -31,10 +31,10 @@
                         @csrf
                         <table class="table table-striped">
                             <tr>
-                                <th colspan="5" scope="col">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 text-right">Voucher Type</label>
-                                        <div class="col-md-6">
+                                <th>
+                                    <div class="col-md-12 form-group row">
+                                        <div class="col-md-4">
+                                            <label class="control-label text-right">Voucher Type <small class="requiredCustom">*</small></label>
                                             <select class="form-control select2 " name="voucher_type_id" id="voucher_type_id" required>
                                                 <option value="">Select Voucher Type</option>
                                                 @foreach($voucherTypes as $voucherType)
@@ -42,21 +42,15 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-
-                                        <label class="control-label col-md-3 text-right">Voucher No <small class="requiredCustom">*</small></label>
-                                        <div class="col-md-8">
-                                            <input type="number" name="voucher_no" id="voucher_no" class="form-control" placeholder="Voucher No">
+                                        <div class="col-md-4">
+                                            <label class="control-label text-right">Voucher No <small class="requiredCustom">*</small></label>
+                                            <input type="number" name="voucher_no" id="voucher_no" class="form-control" placeholder="Voucher No" disabled>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 text-right">Date  <small class="requiredCustom">*</small></label>
-                                        <div class="col-md-8">
+                                        <div class="col-md-4">
+                                            <label class="control-label text-right">Date  <small class="requiredCustom">*</small></label>
                                             <input type="text" name="date" class="datepicker form-control" value="{{date('Y-m-d')}}">
                                         </div>
                                     </div>
-
                                 </th>
                             </tr>
                         </table>
