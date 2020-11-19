@@ -17,28 +17,34 @@
                     <thead>
                     <tr>
                         <th width="5%">#Id</th>
-                        <th>Account Name</th>
                         <th>Date</th>
-{{--                        <th>Voucher Type</th>--}}
-                        <th>Amount</th>
-                        <th>Debit/Credit</th>
+                        <th>Voucher Type</th>
+                        <th>Voucher No</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach($transactions as $key => $transaction)
+
+                        @php
+                            $current_transactions = \Illuminate\Support\Facades\DB::table('transactions')
+                        ->where('voucher_type_id',$transaction->voucher_type_id)
+                        ->where('voucher_no',$transaction->voucher_no)
+                        ->first();
+                        @endphp
                     <tr>
                         <td>{{ $key+1 }}</td>
-                        <td>{{ $transaction->account_name}}</td>
-                        <td>{{ $transaction->date}}</td>
-
-                        <td>{{ $transaction->debit == Null ? $transaction->credit : $transaction->debit }}</td>
-                        <td>{{ $transaction->debit == Null ? 'credit' : 'debit'}}</td>
+                        <td>{{ $current_transactions->date}}</td>
                         <td>
-                            <a href="{{ url('account/voucher-invoice/'.$transaction->voucher_no.'/'.$transaction->date) }}" class="btn btn-sm btn-primary float-left" >print</a>
-                            <a href="{{ route('transaction.edit',$transaction->id) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
-                            <form method="post" action="{{ route('transaction.destroy',$transaction->id) }}" >
-                               @method('DELETE')
+                            @php
+                                echo \App\VoucherType::where('id',$transaction->voucher_type_id)->pluck('name')->first();
+                            @endphp
+                        </td>
+                        <td>{{ $current_transactions->voucher_no}}</td>
+                        <td>
+                            <a href="{{ url('account/voucher-invoice/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" >print</a>
+{{--                            <a href="{{ url('transaction.edit',$transaction->voucher_type_id) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>--}}
+                            <form method="post" action="{{ url('account/transaction-delete/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" >
                                 @csrf
                                 <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('You Are Sure This Delete !')"><i class="fa fa-trash"></i></button>
                             </form>

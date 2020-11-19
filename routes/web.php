@@ -79,7 +79,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('account/cashbook','AccountController@cash_book_form')->name('account.cashbook');
     Route::get('account/cashbook-print/{date_from}/{date_to}','AccountController@cash_book_print');
 
-    Route::get('account/voucher-invoice/{voucher_no}/{transaction_date}','TransactionController@voucher_invoice');
+    //Route::get('account/voucher-invoice/{voucher_no}/{transaction_date}','TransactionController@voucher_invoice');
+    Route::get('account/voucher-invoice/{voucher_type_id}/{voucher_no}','TransactionController@voucher_invoice');
+    Route::post('account/transaction-delete/{voucher_type_id}/{voucher_no}','TransactionController@transactionDelete');
+    //Route::post('account/transaction-delete/{voucher_type_id}/{voucher_no}',function(){echo 'okk';die();});
     Route::get('account/generalledger','TransactionController@general_ledger_form')->name('account.generalledger');
     Route::get('/get-transaction-head/{id}','AccountController@transaction_head');
     Route::post('account/general-ledger','TransactionController@view_general_ledger')->name('account.general_ledger');

@@ -102,41 +102,30 @@
                             <td>
                                 <!--*** CONTENT GOES HERE ***-->
                                 <div class="page" style="padding: 10px;">
-                                    <h3 style="text-align: center;"><strong>Payment Voucher Invoice</strong></h3>
+                                    <h3 style="text-align: center;"><strong>Voucher Invoice</strong></h3>
                                     <div style="clear: both">&nbsp;</div>
                                     <div style="clear: both">&nbsp;</div>
                                     <div class="row">
-                                        <div class="col-md-4"><strong>Payment Voucher NO:</strong> {{ $credited_infos->voucher_no }}</div>
-                                        <div class="col-md-4"><strong>Date:</strong> {{ $credited_infos->date }}</div>
-                                        <div class="col-md-4"><strong>Remarks:</strong> {{ $credited_infos->transaction_description }}</div>
+                                        <div class="col-md-6"><strong> Voucher NO:</strong> {{$transaction_infos[0]->voucher_no}}</div>
+                                        <div class="col-md-6 text-right"><strong>Date:</strong> {{$transaction_infos[0]->date}}</div>
                                     </div>
                                     <div style="clear: both">&nbsp;</div>
                                     <div style="clear: both">&nbsp;</div>
                                     <table class="invoice">
                                         <tr>
-                                            <th>Credit Account Name</th>
-                                            <th>Credit Amount</th>
+                                            <th>Account Name</th>
+                                            <th>Amount</th>
                                         </tr>
-                                        <tr>
-                                            <td>{{ \App\Account::where('HeadCode', $credited_infos->account_no)->pluck('HeadName')->first() }}</td>
-                                            <td> {{ $credited_infos->credit }}</td>
-                                        </tr>
-                                    </table>
-                                    <div style="clear: both">&nbsp;</div>
-                                    <div style="clear: both">&nbsp;</div>
-                                    <table class="invoice">
-                                        <tr>
-                                            <th>Debit Account Name</th>
-                                            <th>Debit Amount</th>
-                                        </tr>
-{{--                                        @if ($count_debited_row > 0)--}}
-{{--                                            @foreach ($debited_infos as $debited_info)--}}
-{{--                                                <tr>--}}
-{{--                                                    <td>{{ \App\Account::where('HeadCode', $debited_info->account_no)->pluck('HeadName')->first() }}</td>--}}
-{{--                                                    <td>{{ $debited_info->debit }}</td>--}}
-{{--                                                </tr>--}}
-{{--                                            @endforeach--}}
-{{--                                        @endif--}}
+                                        @if(!empty($transaction_infos))
+
+                                            @foreach($transaction_infos as $transaction_info)
+                                                <tr>
+                                                <th>{{$transaction_info->account_name}}</th>
+                                                <th>{{$transaction_info->debit ? $transaction_info->debit : $transaction_info->credit}}</th>
+                                                </tr>
+                                            @endforeach
+
+                                        @endif
                                     </table>
                                 </div>
                             </td>

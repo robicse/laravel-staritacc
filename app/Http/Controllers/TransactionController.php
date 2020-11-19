@@ -24,7 +24,13 @@ class TransactionController extends Controller
 
     public function index()
     {
-        $transactions = Transaction::latest()->get();
+        //$transactions = Transaction::latest()->get();
+        $transactions = DB::table('transactions')
+            ->select('voucher_type_id','voucher_no')
+            ->groupBy('voucher_type_id')
+            ->groupBy('voucher_no')
+            //->latest()
+            ->get();
         //dd($transactions);
         return view('backend.posting.index',compact('transactions'));
     }
@@ -172,18 +178,21 @@ class TransactionController extends Controller
         return redirect()->route('transaction.index');
     }
 
-    public function voucher_invoice($voucher_no,$transaction_date)
+//    public function voucher_invoice($voucher_no,$transaction_date)
+//    {
+//        $debited_info = Transaction::where('voucher_no',$voucher_no)->where('date',$transaction_date)->first();
+//        $credited_infos = Transaction::where('voucher_no',$voucher_no)->where('date',$transaction_date)->skip(1)->take(50)->first();
+//
+//        return view('backend.posting.invoice', compact('debited_info', 'credited_infos','count_credited_row'));
+//    }
+
+    public function voucher_invoice($voucher_type_id,$voucher_no)
     {
+        $transaction_infos = Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
 
-        //echo $voucher_no;
-        //echo $transaction_date;
-        //exit;
-    $debited_info = Transaction::where('voucher_no',$voucher_no)->where('date',$transaction_date)->first();
-    $credited_infos = Transaction::where('voucher_no',$voucher_no)->where('date',$transaction_date)->skip(1)->take(50)->first();
-    //dd($credited_infos);
-    //$count_credited_row = count($credited_infos);
-    return view('backend.posting.invoice', compact('debited_info', 'credited_infos','count_credited_row'));
+        $transaction_count = count($transaction_infos);
 
+        return view('backend.posting.invoice', compact('transaction_infos', 'transaction_count'));
     }
     public function general_ledger_form()
     {
@@ -531,5 +540,12 @@ class TransactionController extends Controller
         }
 
         return response()->json(['success'=>true,'data'=>$voucher_no]);
+    }
+
+    public function transactionDelete($voucher_type_id, $voucher_no){
+        DB::table('transactions')->where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->delete();
+
+        Toastr::success('Transactions Deleted Successfully', 'Success');
+        return redirect()->route('transaction.index');
     }
 }
