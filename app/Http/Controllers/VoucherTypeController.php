@@ -34,6 +34,11 @@ class VoucherTypeController extends Controller
             'name' => 'required'
         ]);
         $voucherTypes = new VoucherType();
+        $check_voucher_name = VoucherType::where('name',$request->name)->latest()->pluck('name')->first();
+        if($check_voucher_name){
+            Toastr::warning('Voucher Name Already Exists!', 'Warning');
+            return redirect()->route('voucherType.create');
+        }
         $voucherTypes->name = $request->name;
         $voucherTypes->slug = Str::slug($request->name);
         $voucherTypes->save();
@@ -59,6 +64,11 @@ class VoucherTypeController extends Controller
             'name' => 'required'
         ]);
         $voucherTypes =  VoucherType::find($id);
+        $check_voucher_name = VoucherType::where('name',$request->name)->latest()->pluck('name')->first();
+        if($check_voucher_name){
+            Toastr::warning('Voucher Name Already Exists!', 'Warning');
+            return redirect()->route('voucherType.create');
+        }
         $voucherTypes->name = $request->name;
         $voucherTypes->slug = Str::slug($request->name);
         $voucherTypes->save();
