@@ -114,18 +114,31 @@
                                     <table class="invoice">
                                         <tr>
                                             <th>Account Name</th>
-                                            <th>Amount</th>
+                                            <th>Debit Amount</th>
+                                            <th>Credit Amount</th>
                                         </tr>
+                                        @php
+                                            $sum_debit = 0;
+                                            $sum_credit = 0;
+                                        @endphp
                                         @if(!empty($transaction_infos))
-
                                             @foreach($transaction_infos as $transaction_info)
+                                                @php
+                                                    $sum_debit += $transaction_info->debit ? $transaction_info->debit : 0;
+                                                    $sum_credit += $transaction_info->credit ? $transaction_info->credit : 0;
+                                                @endphp
                                                 <tr>
-                                                <th>{{$transaction_info->account_name}}</th>
-                                                <th>{{$transaction_info->debit ? $transaction_info->debit : $transaction_info->credit}}</th>
+                                                    <th>{{$transaction_info->account_name}}</th>
+                                                    <th>{{$transaction_info->debit ? $transaction_info->debit : ''}}</th>
+                                                    <th>{{$transaction_info->credit ? $transaction_info->credit : ''}}</th>
                                                 </tr>
                                             @endforeach
-
                                         @endif
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th>Total Debit Amount: {{$sum_debit}}</th>
+                                            <th>Total Credit Amount: {{$sum_credit}}</th>
+                                        </tr>
                                     </table>
                                 </div>
                             </td>
