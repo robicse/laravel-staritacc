@@ -17,9 +17,9 @@
                     <thead>
                     <tr>
                         <th width="5%">#Id</th>
-                        <th>Account Name</th>
                         <th>Date</th>
-{{--                        <th>Voucher Type</th>--}}
+                        <th>Voucher Type</th>
+                        <th>Account Name</th>
                         <th>Amount</th>
                         <th>Debit/Credit</th>
                         <th>Action</th>
@@ -29,9 +29,10 @@
                     @foreach($transactions as $key => $transaction)
                     <tr>
                         <td>{{ $key+1 }}</td>
-                        <td>{{ $transaction->account_name}}</td>
                         <td>{{ $transaction->date}}</td>
-
+                        <td>{{ $transaction->VoucherType->name}}</td>
+                        <td>{{ $transaction->account_name}}</td>
+{{--                        <td>{{ $transaction->amount}}</td>--}}
                         <td>{{ $transaction->debit == Null ? $transaction->credit : $transaction->debit }}</td>
                         <td>{{ $transaction->debit == Null ? 'credit' : 'debit'}}</td>
                         <td>

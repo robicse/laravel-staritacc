@@ -46,6 +46,7 @@ class TransactionController extends Controller
             'account_id'=> 'required',
         ]);
 
+
         $check_voucher_no_exists = Transaction::where('voucher_type_id',$request->voucher_type_id)->where('voucher_no',$request->voucher_no)->latest()->pluck('voucher_no')->first();
         if($check_voucher_no_exists){
             Toastr::warning('Voucher NO Already Exists!', 'Warning');
