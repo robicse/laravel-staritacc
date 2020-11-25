@@ -27,7 +27,8 @@
                             {{ session('response') }}
                         </div>
                     @endif
-                    <form method="post" action="{{ route('transaction.update',$transactions->id)}}">
+{{--                    <form method="post" action="{{ route('transaction.update',$transactions->id)}}">--}}
+                    <form method="post" action="{{ url('account/transaction-update/'.$transactions->voucher_type_id.'/'.$transactions->voucher_no)}}">
                         @csrf
                         @method('PUT')
                         <table class="table table-striped">
@@ -91,7 +92,7 @@
                                     <input type="number" min="1" max="" class="price form-control" name="amount[]" value="{{ $transactions->debit == Null ? $transactions->credit : $transactions->debit  }}" required >
                                 </td>
                                 <td>
-                                    <textarea type="text" min="1" max="" rows="3" class="form-control"  name="transaction_description[]"> {!! $transactions->transaction_description !!}</textarea>
+                                    <textarea type="text" min="1" max="" rows="3" class="form-control"  name="transaction_description"> {!! $transactions->transaction_description !!}</textarea>
                                 </td>
                             </tr>
 
@@ -143,7 +144,7 @@
                     '<td><select class="form-control account_id select2" name="account_id[]" value="" id="account_id_'+n+'" required>' + service + '</select></td>' +
                     '<td><select class="form-control debit_or_credit select2" name="debit_or_credit[]" value="" id="debit_or_credit_'+n+'" onchange="getval('+n+',this);" required>' + debit_or_credit + '</select></td>' +
                     '<td><input type="text" min="1" max="" class="price form-control" name="amount[]" value="" required></td>' +
-                    '<td><textarea type="text" class="form-control" rows="3" name="transaction_description[]" required> {!! $transactions->transaction_description !!}</textarea></td>' +
+                    {{--'<td><textarea type="text" class="form-control" rows="3" name="transaction_description[]" required> {!! $transactions->transaction_description !!}</textarea></td>' +--}}
                     '<td><input type="button" class="btn btn-danger delete" value="x"></td></tr>';
 
                 $('.neworderbody').append(tr);

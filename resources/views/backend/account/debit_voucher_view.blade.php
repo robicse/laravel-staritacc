@@ -28,22 +28,23 @@
 {{--                    Company Info--}}
 {{--                </div>--}}
                 <div class="col-md-8" style="text-align: center; margin-left: 100px">
-                    <h2>Max Enterprise</h2>
-                    <p style="margin: 0px">Corporate Housekeeping & Facility Management Service Provider</p>
+                    <h2>StarIT LTD</h2>
+{{--                    <p style="margin: 0px">Corporate Housekeeping & Facility Management Service Provider</p>--}}
                     <p style="margin: 0px">
-                        Flat-2A,House-06,Block-2C,Pallabi,Mirpur,Dhaka-1216,Bangladesh
+                       BBTOA Building,4th Floor,Road no:9 ,South Kallyanpur, Mirpur,Dhaka-1207
                     </p>
+                    <p style="margin: 0px"><b>Phone</b>:+88028091125 <span>, <b>Email</b>:info@123@starit.com, </span> <span><b>Web</b> :www.123starir.com</span> </p>
                     <h2 id="rcorners2">Debit Voucher</h2>
                 </div>
                 <div class="col-md-4" style="text-align: right; float: right;margin-top: -58px ">
-{{--                   V.NO :______________--}}
+                   Transaction NO : {{$transaction}}
                     <br/>
                    Date : {{ $date_to }}
                 </div>
 
                 <div style="margin-top: 30px">
                     <p>Debit A/C: {{$general_ledger}}</p>
-                    <p>Paid To: {{$acc_name}}</p>
+                    <p>Head of Account: {{$acc_name}}</p>
                 </div>
                 <table class="table table-striped table-bordered">
                     <thead>

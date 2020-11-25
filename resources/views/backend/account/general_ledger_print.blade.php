@@ -76,8 +76,13 @@
         <div class="row">
             <div class="col-md-12">
 
-                <div class="page-header" style="text-align: center">
-                    <img src="{{ asset('header.png') }}" width="100%" height="150px" alt="header img">
+                <div class="page-header" style="text-align: left">
+                    <img src="{{ asset('backend/2020-11-21.png') }}" width="200px" height="150px" alt="header img">
+                </div>
+                <div class="col-md-8" style="text-align: center; margin-left: 100px">
+                    <h2>StarIT LTD</h2>
+                    <p style="margin: 0px">BBTOA Building,4th Floor,Road no:9 ,South Kallyanpur, Mirpur,Dhaka-1207</p>
+                    <p style="margin: 0px"><b>Phone</b>:+88028091125 <span>, <b>Email</b>:info@123@starit.com, </span> <span><b>Web</b> :www.123starir.com</span> </p>
                 </div>
 
                 <div class="page-footer">

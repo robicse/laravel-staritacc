@@ -85,22 +85,20 @@
 
                 <div class="tile">
                     <div class="col-md-8" style="text-align: center; margin-left: 100px">
-                        <h2>Max Enterprise</h2>
-                        <p style="margin: 0px">Corporate Housekeeping & Facility Management Service Provider</p>
-                        <p style="margin: 0px">
-                            Flat-2A,House-06,Block-2C,Pallabi,Mirpur,Dhaka-1216,Bangladesh
-                        </p>
+                        <h2>StarIT LTD</h2>
+                        <p style="margin: 0px">BBTOA Building,4th Floor,Road no:9 ,South Kallyanpur, Mirpur,Dhaka-1207</p>
+                        <p style="margin: 0px"><b>Phone</b>:+88028091125 <span>, <b>Email</b>:info@123@starit.com, </span> <span><b>Web</b> :www.123starir.com</span> </p>
                         <h2 id="rcorners2">Debit Voucher</h2>
                     </div>
                     <div class="col-md-4" style="text-align: right; float: right;margin-top: -58px ">
-                        V.NO :______________
+                        Transaction.NO : {{$transaction}}
                         <br/>
                         Date : {{ $date_to }}
                     </div>
 
                     <div style="margin-top: 30px">
-                        <p>Debit A/C: ___________________________________________________________________________________________________________________________</p>
-                        <p>Paid To_______________________________________________________________________________________________________________________________</p>
+                        <p>Debit A/C: {{$transaction_head}}</p>
+                        <p>Head of Account: {{$acc_name}}</p>
                     </div>
                     {{--                <div class="col-md-12" style="text-align: right;">--}}
                     {{--                    Account Name : {{ \App\Account::where('HeadCode', $general_ledger)->pluck('HeadName')->first() }}--}}
@@ -112,133 +110,39 @@
                             <th width="70%" style="text-align: center">PARTICULARS</th>
                             {{--                        <th width="12%">Debit</th>--}}
                             <th width="15%">Taka</th>
-                            <th width="15%"  rowspan="3">Paisa</th>
                         </tr>
                         </thead>
                         <tbody>
                         @php
                             $sum_debit = 0;
-                            $sum_credit = 0;
+                           // $sum_credit = 0;
                             $final_debit_credit = 0;
                             $flag = 0;
                             $first_day = date('Y-m-01',strtotime($date_from));
                             $last_day = date('Y-m-t',strtotime($date_from));
                         @endphp
-                        @if($PreBalance > 0)
-                            @php
-                                if( ($PreBalance > 0) && ($preDebCre == 'De') )
-                                {
-                                    $pre_particulars = "To balance b/d (Previous Balance)";
-                                    $sum_debit += $PreBalance;
-                                }else{
-                                    $pre_particulars = "By balance b/d (Previous Balance)";
-                                    $sum_credit += $PreBalance;
-                                }
-                            @endphp
-                            <tr style="background-color: red">
-                                {{--                            <td>{{ $first_day }}</td>--}}
-                                <td>{{ $pre_particulars }}</td>
-                                <td>{{ $preDebCre == 'De' ? number_format($PreBalance,2,'.',',') : '' }}</td>
-                                <td>{{ $preDebCre == 'Cr' ? number_format($PreBalance,2,'.',',') : '' }}</td>
-                                <td>{{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}</td>
-                            </tr>
-                        @endif
+
                         @foreach($general_ledger_infos as $key => $general_ledger_info)
                             @php
                                 $debit = $general_ledger_info->debit;
-                                $credit = $general_ledger_info->credit;
+                                //$credit = $general_ledger_info->credit;
 
                                 $sum_debit  += $debit;
-                                $sum_credit += $credit;
-
-                                if($debit > $credit)
-                                    $curRowDebCre = 'De';
-                                else
-                                    $curRowDebCre = 'Cr';
-
-                                //dd($preDebCre);
-
-                                if($preDebCre == 'De/Cr' && $flag == 0)
-                                {
-                                    $preDebCre = $curRowDebCre;
-                                    $flag = 1;
-                                }
-
-                                if($preDebCre == 'De' && $curRowDebCre == 'De')
-                                {
-                                    /*if($PreBalance > $debit)
-                                    {
-                                        $PreBalance = $PreBalance - $debit;
-                                    }else{
-                                        $PreBalance = $debit - $PreBalance;
-                                    }*/
-                                    $PreBalance += $debit;
-                                    $preDebCre = 'De';
-                                }elseif($preDebCre == 'De' && $curRowDebCre == 'Cr'){
-                                    if($PreBalance > $credit)
-                                    {
-                                        $PreBalance = $PreBalance - $credit;
-                                        $preDebCre = 'De';
-                                    }else{
-                                        $PreBalance = $credit - $PreBalance;
-                                        $preDebCre = 'Cr';
-                                    }
-                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'De'){
-                                    if($PreBalance > $debit)
-                                    {
-                                        $PreBalance = $PreBalance - $debit;
-                                        $preDebCre = 'Cr';
-                                    }else{
-                                        $PreBalance = $debit - $PreBalance;
-                                        $preDebCre = 'De';
-                                    }
-                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'Cr'){
-                                    /*if($PreBalance > $credit)
-                                    {
-                                        $PreBalance = $PreBalance - $credit;
-                                    }else{
-                                        $PreBalance = $credit - $PreBalance;
-                                    }*/
-                                    $PreBalance += $credit;
-                                    $preDebCre = 'Cr';
-                                }else{
-
-                                }
+                                //$sum_credit += $credit;
 
                             @endphp
                             <tr>
                                 {{--                            <td>{{ $general_ledger_info->date }}</td>--}}
                                 <td>{{ $general_ledger_info->transaction_description }}</td>
                                 <td>{{ number_format($debit,2,'.',',') }}</td>
-                                <td>{{ number_format($credit,2,'.',',') }}</td>
-                                <td>{{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}</td>
+{{--                                <td>{{ number_format($credit,2,'.',',') }}</td>--}}
+{{--                                <td>{{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}</td>--}}
                             </tr>
                         @endforeach
-                        @if($sum_debit !=$sum_credit)
-                            @php
-                                if($sum_debit > $sum_credit)
-                                {
-                                    $final_debit_credit = $sum_debit;
-                                    $particulars = "By balance c/d (Final Balance)";
-                                }else{
-                                    $final_debit_credit = $sum_credit;
-                                    $particulars = "To balance c/d (Final Balance)";
-                                }
-
-                            @endphp
-                            <tr style="background-color: red">
-                                {{--                            <td>{{ $last_day }}</td>--}}
-                                <td>{{ $particulars }}</td>
-                                <td>{{ $sum_credit > $sum_debit ? number_format($PreBalance,2,'.',',') : '' }}</td>
-                                <td>{{ $sum_debit > $sum_credit ? number_format($PreBalance,2,'.',',') : '' }}</td>
-                                <td>&nbsp;</td>
-                            </tr>
-                        @endif
                         <tr>
                             {{--                        <td></td>--}}
                             <td align="right">Total</td>
-                            <td>{{ number_format($final_debit_credit,2,'.',',') }}</td>
-                            <td>{{ number_format($final_debit_credit,2,'.',',') }}</td>
+                            <td>{{ number_format($sum_debit,2,'.',',') }}</td>
                             {{--                        <td>&nbsp;</td>--}}
                         </tr>
                         </tbody>

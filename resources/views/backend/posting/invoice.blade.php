@@ -78,8 +78,13 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <div class="page-header" style="text-align: center">
-                        <img src="{{ asset('header.png') }}" width="100%" height="150px" alt="header img">
+                    <div class="page-header" style="text-align: left">
+                        <img src="{{ asset('backend/2020-11-21.png') }}" width="200px" height="150px" alt="header img">
+                    </div>
+                    <div class="col-md-10" style="text-align: center; margin-left: 100px">
+                        <h2>StarIT LTD</h2>
+                        <p style="margin: 0px">BBTOA Building,4th Floor,Road no:9 ,South Kallyanpur, Mirpur,Dhaka-1207</p>
+                        <p style="margin: 0px"><b>Phone</b>:+88028091125 <span>, <b>Email</b>:info@123@starit.com, </span> <span><b>Web</b> :www.123starir.com</span> </p>
                     </div>
 
                     <div class="page-footer">
@@ -102,20 +107,27 @@
                             <td>
                                 <!--*** CONTENT GOES HERE ***-->
                                 <div class="page" style="padding: 10px;">
-                                    <h3 style="text-align: center;"><strong>Voucher Invoice</strong></h3>
+                                    <h3 style="text-align: center;"><strong>@php
+                                                echo \App\VoucherType::where('id',$transaction_infos[0]->voucher_type_id)->pluck('name')->first();
+                                            @endphp</strong></h3>
                                     <div style="clear: both">&nbsp;</div>
                                     <div style="clear: both">&nbsp;</div>
+                                    <div class="col-md-6 text-left"><strong>Transaction No:</strong> {{$transaction_infos[0]->id}}</div>
                                     <div class="row">
-                                        <div class="col-md-6"><strong> Voucher NO:</strong> {{$transaction_infos[0]->voucher_no}}</div>
+                                        <div class="col-md-6"><strong> Voucher NO:</strong>
+                                            @php
+                                                echo \App\VoucherType::where('id',$transaction_infos[0]->voucher_type_id)->pluck('name')->first();
+                                            @endphp - {{$transaction_infos[0]->voucher_no}}
+                                        </div>
                                         <div class="col-md-6 text-right"><strong>Date:</strong> {{$transaction_infos[0]->date}}</div>
                                     </div>
                                     <div style="clear: both">&nbsp;</div>
                                     <div style="clear: both">&nbsp;</div>
                                     <table class="invoice">
                                         <tr>
-                                            <th>Account Name</th>
-                                            <th>Debit Amount</th>
-                                            <th>Credit Amount</th>
+                                            <th width="60%">Head Of Account </th>
+                                            <th  width="20%">Debit Amount</th>
+                                            <th  width="20%">Credit Amount</th>
                                         </tr>
                                         @php
                                             $sum_debit = 0;
@@ -135,9 +147,9 @@
                                             @endforeach
                                         @endif
                                         <tr>
-                                            <th>&nbsp;</th>
-                                            <th>Total Debit Amount: {{$sum_debit}}</th>
-                                            <th>Total Credit Amount: {{$sum_credit}}</th>
+                                            <th colspan="2">{{$transaction_info->transaction_description}}</th>
+
+                                            <th>Total Amount: {{$sum_credit}}</th>
                                         </tr>
                                     </table>
                                 </div>
@@ -155,6 +167,22 @@
                         </tfoot>
 
                     </table>
+                    <div style="width: 100%;padding-top: 80px;padding-bottom: 80px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p  width="20%" style="border-top: solid 1px #000;" align="center"> Prepared By</p>
+
+
+                            </div>
+                            <div class="col-md-4">
+                                <p  width="20%" style="border-top: solid 1px #000;" align="center"> Authorised By</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p  width="20%" style="border-top: solid 1px #000;" align="center"> Approved By</p>
+                            </div>
+                        </div>
+
+                    </div>
 
                 </div>
             </div>
