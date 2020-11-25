@@ -144,6 +144,7 @@
                 t += amt;
             });
             $('#total_amount').val(t);
+            $('#due_amount').val(t);
         }
         $(function () {
             $('.getmoney').change(function(){

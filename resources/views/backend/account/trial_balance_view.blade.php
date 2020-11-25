@@ -14,8 +14,9 @@
                     <thead>
                     <tr>
                         <th width="40%">Accounts Head</th>
-                        <th width="30%">Debit Taka</th>
-                        <th width="30%">Credit Taka</th>
+                        <th width="30%">Debit</th>
+                        <th width="30%">Credit</th>
+                        <th width="30%">Balance</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,27 +45,77 @@
                             <td>{{ $pre_particulars }}</td>
                             <td>{{ $preDebCre == 'De' ? $number_format_balance : '' }}</td>
                             <td>{{ $preDebCre == 'Cr' ? $number_format_balance : '' }}</td>
+                            <td></td>
                         </tr>
                     @endif
                     @if(count($oResultAssets) > 0)
                         <tr>
-                            <th colspan="3" style="background-color: #dddddd;">Assets</th>
+                            <th colspan="4" style="background-color: #dddddd;">Assets</th>
                         </tr>
                         @foreach($oResultAssets as $oResultAsset)
                             @php
                                 $sum_assets_debit += $oResultAsset->debit;
                                 $sum_assets_credit += $oResultAsset->credit;
+
+                                $debit  = $oResultAsset->debit;
+                                $credit = $oResultAsset->credit;
+
+                                if($debit > $credit)
+                                    $curRowDebCre = 'De';
+                                else
+                                    $curRowDebCre = 'Cr';
+
+
+
+                                if($preDebCre == 'De/Cr' && $flag == 0)
+                                {
+                                    $preDebCre = $curRowDebCre;
+                                    $flag = 1;
+                                }
+
+                                if($preDebCre == 'De' && $curRowDebCre == 'De')
+                                {
+                                    $PreBalance += $debit;
+                                    $preDebCre = 'De';
+                                }elseif($preDebCre == 'De' && $curRowDebCre == 'Cr'){
+                                    if($PreBalance > $credit)
+                                    {
+                                        $PreBalance = $PreBalance - $credit;
+                                        $preDebCre = 'De';
+                                    }else{
+                                        $PreBalance = $credit - $PreBalance;
+                                        $preDebCre = 'Cr';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'De'){
+                                    if($PreBalance > $debit)
+                                    {
+                                        $PreBalance = $PreBalance - $debit;
+                                        $preDebCre = 'Cr';
+                                    }else{
+                                        $PreBalance = $debit - $PreBalance;
+                                        $preDebCre = 'De';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'Cr'){
+                                    $PreBalance += $credit;
+                                    $preDebCre = 'Cr';
+                                }else{
+
+                                }
                             @endphp
                             <tr>
                                 <td>{{ $oResultAsset->HeadName }}</td>
                                 <td>{{ $oResultAsset->debit }}</td>
                                 <td>{{ $oResultAsset->credit }}</td>
+                                <td>
+                                    {{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}
+                                </td>
                             </tr>
                         @endforeach
                         <tr style="background-color: pink;">
                             <th>Total:</th>
                             <th>Debit: {{ $sum_assets_debit }}</th>
                             <th>Credit: {{ $sum_assets_credit }}</th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -73,23 +124,60 @@
                     @endphp
                     @if(count($oResultIncomes) > 0)
                         <tr>
-                            <th colspan="3" style="background-color: #dddddd;">Income</th>
+                            <th colspan="4" style="background-color: #dddddd;">Income</th>
                         </tr>
                         @foreach($oResultIncomes as $oResultIncome)
                             @php
                                 $sum_income_debit += $oResultIncome->debit;
                                 $sum_income_credit += $oResultIncome->credit;
+
+                                $debit  = $oResultIncome->debit;
+                                $credit = $oResultIncome->credit;
+
+
+                                if($preDebCre == 'De' && $curRowDebCre == 'De')
+                                {
+                                    $PreBalance += $debit;
+                                    $preDebCre = 'De';
+                                }elseif($preDebCre == 'De' && $curRowDebCre == 'Cr'){
+                                    if($PreBalance > $credit)
+                                    {
+                                        $PreBalance = $PreBalance - $credit;
+                                        $preDebCre = 'De';
+                                    }else{
+                                        $PreBalance = $credit - $PreBalance;
+                                        $preDebCre = 'Cr';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'De'){
+                                    if($PreBalance > $debit)
+                                    {
+                                        $PreBalance = $PreBalance - $debit;
+                                        $preDebCre = 'Cr';
+                                    }else{
+                                        $PreBalance = $debit - $PreBalance;
+                                        $preDebCre = 'De';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'Cr'){
+                                    $PreBalance += $credit;
+                                    $preDebCre = 'Cr';
+                                }else{
+
+                                }
                             @endphp
                             <tr>
                                 <td>{{ $oResultIncome->HeadName }}</td>
                                 <td>{{ $oResultIncome->debit }}</td>
                                 <td>{{ $oResultIncome->credit }}</td>
+                                <td>
+                                    {{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}
+                                </td>
                             </tr>
                         @endforeach
                         <tr style="background-color: pink;">
                             <th>Total:</th>
                             <th>Debit: {{ $sum_income_debit }}</th>
                             <th>Credit: {{ $sum_income_credit }}</th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -98,23 +186,60 @@
                     @endphp
                     @if(count($oResultExpenses) > 0)
                         <tr>
-                            <th colspan="3" style="background-color: #dddddd;">Expense</th>
+                            <th colspan="4" style="background-color: #dddddd;">Expense</th>
                         </tr>
                         @foreach($oResultExpenses as $oResultExpense)
                             @php
                                 $sum_expense_debit += $oResultExpense->debit;
                                 $sum_expense_credit += $oResultExpense->credit;
+
+                                $debit  = $oResultExpense->debit;
+                                $credit = $oResultExpense->credit;
+
+
+                                if($preDebCre == 'De' && $curRowDebCre == 'De')
+                                {
+                                    $PreBalance += $debit;
+                                    $preDebCre = 'De';
+                                }elseif($preDebCre == 'De' && $curRowDebCre == 'Cr'){
+                                    if($PreBalance > $credit)
+                                    {
+                                        $PreBalance = $PreBalance - $credit;
+                                        $preDebCre = 'De';
+                                    }else{
+                                        $PreBalance = $credit - $PreBalance;
+                                        $preDebCre = 'Cr';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'De'){
+                                    if($PreBalance > $debit)
+                                    {
+                                        $PreBalance = $PreBalance - $debit;
+                                        $preDebCre = 'Cr';
+                                    }else{
+                                        $PreBalance = $debit - $PreBalance;
+                                        $preDebCre = 'De';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'Cr'){
+                                    $PreBalance += $credit;
+                                    $preDebCre = 'Cr';
+                                }else{
+
+                                }
                             @endphp
                             <tr>
                                 <td>{{ $oResultExpense->HeadName }}</td>
                                 <td>{{ $oResultExpense->debit }}</td>
                                 <td>{{ $oResultExpense->credit }}</td>
+                                <td>
+                                    {{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}
+                                </td>
                             </tr>
                         @endforeach
                         <tr style="background-color: pink;">
                             <th>Total:</th>
                             <th>Debit: {{ $sum_expense_debit }}</th>
                             <th>Credit: {{ $sum_expense_credit }}</th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -123,23 +248,59 @@
                     @endphp
                     @if(count($oResultLiabilities) > 0)
                         <tr>
-                            <th colspan="3" style="background-color: #dddddd;">Liability</th>
+                            <th colspan="4" style="background-color: #dddddd;">Liability</th>
                         </tr>
                         @foreach($oResultLiabilities as $oResultLiabilitie)
                             @php
                                 $sum_liability_debit += $oResultLiabilitie->debit;
                                 $sum_liability_credit += $oResultLiabilitie->credit;
+
+                                $debit  = $oResultLiabilitie->debit;
+                                $credit = $oResultLiabilitie->credit;
+
+                                if($preDebCre == 'De' && $curRowDebCre == 'De')
+                                {
+                                    $PreBalance += $debit;
+                                    $preDebCre = 'De';
+                                }elseif($preDebCre == 'De' && $curRowDebCre == 'Cr'){
+                                    if($PreBalance > $credit)
+                                    {
+                                        $PreBalance = $PreBalance - $credit;
+                                        $preDebCre = 'De';
+                                    }else{
+                                        $PreBalance = $credit - $PreBalance;
+                                        $preDebCre = 'Cr';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'De'){
+                                    if($PreBalance > $debit)
+                                    {
+                                        $PreBalance = $PreBalance - $debit;
+                                        $preDebCre = 'Cr';
+                                    }else{
+                                        $PreBalance = $debit - $PreBalance;
+                                        $preDebCre = 'De';
+                                    }
+                                }elseif($preDebCre == 'Cr' && $curRowDebCre == 'Cr'){
+                                    $PreBalance += $credit;
+                                    $preDebCre = 'Cr';
+                                }else{
+
+                                }
                             @endphp
                             <tr>
                                 <td>{{ $oResultLiabilitie->HeadName }}</td>
                                 <td>{{ $oResultLiabilitie->debit }}</td>
                                 <td>{{ $oResultLiabilitie->credit }}</td>
+                                <td>
+                                    {{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}
+                                </td>
                             </tr>
                         @endforeach
                         <tr style="background-color: pink;">
                             <th>Total:</th>
                             <th>Debit: {{ $sum_liability_debit }}</th>
                             <th>Credit: {{ $sum_liability_credit }}</th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -174,6 +335,7 @@
                         <th>Final Total:</th>
                         <th>Debit: {{ $final_sum_credit }}</th>
                         <th>Credit: {{ $final_sum_debit }}</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </tbody>
                 </table>
