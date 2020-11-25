@@ -82,13 +82,14 @@ Route::group(['middleware' => ['auth']], function() {
     //Route::get('account/voucher-invoice/{voucher_no}/{transaction_date}','TransactionController@voucher_invoice');
     Route::get('account/voucher-invoice/{voucher_type_id}/{voucher_no}','TransactionController@voucher_invoice');
     Route::post('account/transaction-delete/{voucher_type_id}/{voucher_no}','TransactionController@transactionDelete');
-    //Route::post('account/transaction-delete/{voucher_type_id}/{voucher_no}',function(){echo 'okk';die();});
+    Route::get('account/transaction-edit/{voucher_type_id}/{voucher_no}','TransactionController@transactionEdit');
+    Route::post('account/transaction-update/{voucher_type_id}/{voucher_no}','TransactionController@transactionUpdate');
     Route::get('account/generalledger','TransactionController@general_ledger_form')->name('account.generalledger');
     Route::get('/get-transaction-head/{id}','AccountController@transaction_head');
     Route::post('account/general-ledger','TransactionController@view_general_ledger')->name('account.general_ledger');
     Route::get('account/general-ledger-print/{headcode}/{date_from}/{date_to}','TransactionController@general_ledger_print');
     Route::get('account/trial-balance','TransactionController@trial_balance_form');
-    Route::get('account/trial-balance-print/{date_from}/{date_to}','AccountController@trial_balance_print');
+    Route::get('account/trial-balance-print/{date_from}/{date_to}','TransactionController@trial_balance_print');
     Route::post('account/trial-balance','TransactionController@view_trial_balance')->name('account.trial_balance');
     Route::get('account/balance-sheet','TransactionController@balance_sheet');
     Route::get('account/balance-sheet-print','TransactionController@balance_sheet_print');

@@ -14,8 +14,12 @@
             <div class="tile">
                 {{--<h3 class="tile-title">Accounts</h3>--}}
                 <div class="col-sm-4" style="width: 33.33333333%;height:180px; float: left;">
-                    Company Info
+                    <h2>StarIT LTD</h2>
+                    <p style="margin: 0px">BBTOA Building,4th Floor,Road no:9 ,South Kallyanpur, Mirpur,Dhaka-1207</p>
+                    <p style="margin: 0px"><b>Phone</b>:+88028091125 <span>, <b>Email</b>:info@123@starit.com </span></p>
+                    <p><b>Web</b> :www.123starir.com</p>
                 </div>
+
                 <div class="col-sm-4" style="text-align: center; width: 33.33333333%; float: left;">
                     <h2>General Ledger</h2>
                 </div>
@@ -23,10 +27,10 @@
                     From Date : {{ $date_from }}
                     <br/>
                     To Date : {{ $date_to }}
-                </div>
-                <div class="col-md-12" style="text-align: right;">
+                    <br>
                     Account Name : {{ \App\Account::where('HeadCode', $general_ledger)->pluck('HeadName')->first() }}
                 </div>
+
                 <table class="table table-striped table-bordered">
                     <thead>
                     <tr>
@@ -133,12 +137,14 @@
                         <tr>
                             <td>{{ $general_ledger_info->date }}</td>
                             <td>{{ $general_ledger_info->transaction_description }}</td>
-                            <td>{{ $general_ledger_info->transaction_description }}</td>
                             <td>
                                 @php
                                     echo \App\VoucherType::where('id',$general_ledger_info->voucher_type_id)->pluck('name')->first();
                                 @endphp
                             </td>
+                            <td>@php
+                                    echo \App\VoucherType::where('id',$general_ledger_info->voucher_type_id)->pluck('name')->first();
+                                @endphp - {{ $general_ledger_info->voucher_no }}</td>
                             <td>{{ number_format($debit,2,'.',',') }}</td>
                             <td>{{ number_format($credit,2,'.',',') }}</td>
                             <td>{{ number_format($PreBalance,2,'.',',') }} {{ $preDebCre }}</td>
@@ -179,10 +185,6 @@
                     </tr>
                     </tbody>
                 </table>
-                {{--<div class="tile-footer">
-
-                </div>--}}
-                {{--{{ $products->links() }}--}}
             </div>
                 <div class="text-center">
                     <a href="{{ url('account/general-ledger-print/'.$general_ledger.'/'.$date_from.'/'.$date_to) }}" target="_blank" class="btn btn-sm btn-primary float-left">Print</a>

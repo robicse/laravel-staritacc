@@ -44,7 +44,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label text-right">Voucher No <small class="requiredCustom">*</small></label>
-                                            <input type="number" name="voucher_no" id="voucher_no" class="form-control" placeholder="Voucher No" disabled>
+                                            <input type="number" name="voucher_no" id="voucher_no" class="form-control" placeholder="Voucher No" readonly>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label text-right">Date  <small class="requiredCustom">*</small></label>
@@ -90,7 +90,7 @@
                                     <input type="number" min="1" max="" class="price form-control" name="amount[]" value="" required >
                                 </td>
                                 <td>
-                                    <textarea type="text" min="1" max="" rows="3" class="form-control" name="transaction_description[]"> </textarea>
+                                    <textarea type="text" min="1" max="" rows="3" class="form-control" name="transaction_description"> </textarea>
                                 </td>
                             </tr>
 
@@ -142,7 +142,7 @@
                     '<td><select class="form-control account_id select2" name="account_id[]" id="account_id_'+n+'" required>' + service + '</select></td>' +
                     '<td><select class="form-control debit_or_credit select2" name="debit_or_credit[]" id="debit_or_credit_'+n+'"  required>' + debit_or_credit + '</select></td>' +
                     '<td><input type="text" min="1" max="" class="price form-control" name="amount[]" value="" required></td>' +
-                    '<td><textarea type="text" class="form-control" rows="3" name="transaction_description[]" required></textarea></td>' +
+                    // '<td><textarea type="text" class="form-control" rows="3" name="transaction_description[]" required></textarea></td>' +
                     '<td><input type="button" class="btn btn-danger delete" value="x"></td></tr>';
 
                 $('.neworderbody').append(tr);
@@ -192,7 +192,6 @@
         });
 
 
-
         $('#voucher_type_id').on('change',function (){
             var current_voucher_type_id = $('#voucher_type_id').val();
             $.ajax({
@@ -213,6 +212,6 @@
         });
 
     </script>
-    @endpush
+@endpush
 
 

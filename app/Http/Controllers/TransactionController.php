@@ -48,11 +48,13 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request->all());
         $this->validate($request, [
             'account_id'=> 'required',
         ]);
 
-        $check_voucher_no_exists = Transaction::where('voucher_type_id',$request->voucher_type_id)->where('voucher_no',$request->voucher_no)->latest()->pluck('voucher_no')->first();
+        $check_voucher_no_exists = Transaction::where('voucher_no',$request->voucher_no)->where('voucher_type_id',$request->voucher_type_id)->latest()->pluck('voucher_no')->first();
+        //dd($check_voucher_no_exists);
         if($check_voucher_no_exists){
             Toastr::warning('Voucher NO Already Exists!', 'Warning');
             return redirect()->route('transaction.create');
@@ -79,6 +81,7 @@ class TransactionController extends Controller
             $account_id = $request->account_id[$i];
             $accounts = Account::where('id',$account_id)->first();
 
+
             $transactions = new Transaction();
             $transactions->voucher_type_id = $request->voucher_type_id;
             $transactions->voucher_no = $request->voucher_no ;
@@ -90,7 +93,8 @@ class TransactionController extends Controller
             $transactions->account_type = $accounts->HeadType;
             $transactions->debit = $debit;
             $transactions->credit = $credit;
-            $transactions->transaction_description = $request->transaction_description[$i];
+            $transactions->transaction_description = $request->transaction_description;
+            //dd($transactions);
             $transactions->save();
 
         }
@@ -105,17 +109,18 @@ class TransactionController extends Controller
     }
 
 
-    public function edit($id)
+    public function transactionEdit( $voucher_type_id, $voucher_no)
     {
         $voucherTypes=VoucherType::all();
         $accounts = Account::all();
-        $transactions = Transaction::find($id);
+        //$transactions = Transaction::find($id);;
+        $transactions= Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
         //dd($transactions);
         return view('backend.posting.edit',compact('voucherTypes','accounts','transactions'));
     }
 
 
-    public function update(Request $request, $id)
+    public function transactionUpdate(Request $request, $voucher_type_id, $voucher_no)
     {
         //dd($request->all());
         $this->validate($request, [
@@ -144,7 +149,7 @@ class TransactionController extends Controller
             $accounts = Account::where('id',$account_id)->first();
             //dd($accounts);
             // Transaction
-            $transactions = Transaction::find($id);
+            $transactions= Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
             $transactions->voucher_type_id = $request->voucher_type_id;
             $transactions->voucher_no = $request->voucher_no;
             if ($request->voucher_no +2000)
@@ -160,7 +165,7 @@ class TransactionController extends Controller
             $transactions->account_type = $accounts->HeadType;
             $transactions->debit = $debit;
             $transactions->credit = $credit;
-            $transactions->transaction_description = $request->transaction_description[$i];
+            $transactions->transaction_description = $request->transaction_description;
             //dd($serviceSaleDetails);
             $transactions->save();
 
@@ -178,20 +183,12 @@ class TransactionController extends Controller
         return redirect()->route('transaction.index');
     }
 
-//    public function voucher_invoice($voucher_no,$transaction_date)
-//    {
-//        $debited_info = Transaction::where('voucher_no',$voucher_no)->where('date',$transaction_date)->first();
-//        $credited_infos = Transaction::where('voucher_no',$voucher_no)->where('date',$transaction_date)->skip(1)->take(50)->first();
-//
-//        return view('backend.posting.invoice', compact('debited_info', 'credited_infos','count_credited_row'));
-//    }
-
     public function voucher_invoice($voucher_type_id,$voucher_no)
     {
         $transaction_infos = Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
 
         $transaction_count = count($transaction_infos);
-
+//dd($transaction_infos);
         return view('backend.posting.invoice', compact('transaction_infos', 'transaction_count'));
     }
     public function general_ledger_form()
@@ -520,6 +517,169 @@ class TransactionController extends Controller
         return view('backend.account.trial_balance_view', compact('date_from','date_to','oResultAssets','oResultIncomes','oResultExpenses','oResultLiabilities','PreBalance','preDebCre'));
     }
 
+    public function trial_balance_print($date_from,$date_to)
+    {
+
+        $PreBalance=0;
+        $preDebCre = 'De/Cr';
+        $PreResultAssets = '';
+        $PreResultIncomes = '';
+        $PreResultExpenses = '';
+        $PreResultLiabilities = '';
+
+        $oResultAssets = '';
+        $oResultIncomes = '';
+        $oResultExpenses = '';
+        $oResultLiabilities = '';
+
+        if ($date_from && $date_to) {
+
+            $pre_sum_assets_debit = 0;
+            $pre_sum_assets_credit = 0;
+
+            $PreResultAssets = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','A')
+                ->where('transactions.date','<', $date_from)
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            if(count($PreResultAssets) > 0)
+            {
+                foreach($PreResultAssets as $PreResultAsset)
+                {
+                    $pre_sum_assets_debit += $PreResultAsset->debit;
+                    $pre_sum_assets_credit += $PreResultAsset->credit;
+                }
+            }
+
+            $pre_sum_income_debit = 0;
+            $pre_sum_income_credit = 0;
+
+            $PreResultIncomes = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','I')
+                ->where('transactions.date','<', $date_from)
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            if(count($PreResultIncomes) > 0)
+            {
+                foreach($PreResultIncomes as $PreResultIncome)
+                {
+                    $pre_sum_income_debit += $PreResultIncome->debit;
+                    $pre_sum_income_credit += $PreResultIncome->credit;
+                }
+            }
+
+            $pre_sum_expense_debit = 0;
+            $pre_sum_expense_credit = 0;
+
+            $PreResultExpenses = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','E')
+                ->where('transactions.date','<', $date_from)
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            if(count($PreResultExpenses) > 0)
+            {
+                foreach($PreResultExpenses as $PreResultExpense)
+                {
+                    $pre_sum_expense_debit += $PreResultExpense->debit;
+                    $pre_sum_expense_credit += $PreResultExpense->credit;
+                }
+            }
+
+            $pre_sum_liability_debit = 0;
+            $pre_sum_liability_credit = 0;
+
+            $PreResultLiabilities = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','L')
+                ->where('transactions.date','<', $date_from)
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            if(count($PreResultLiabilities) > 0)
+            {
+                foreach($PreResultLiabilities as $PreResultLiabilitie)
+                {
+                    $pre_sum_liability_debit += $PreResultLiabilitie->debit;
+                    $pre_sum_liability_credit += $PreResultLiabilitie->credit;
+                }
+            }
+
+            $final_pre_sum_debit = $pre_sum_assets_debit + $pre_sum_income_debit + $pre_sum_expense_debit + $pre_sum_liability_debit;
+            $final_pre_sum_credit = $pre_sum_assets_credit + $pre_sum_income_credit + $pre_sum_expense_credit + $pre_sum_liability_credit;
+            if($final_pre_sum_debit > $final_pre_sum_credit)
+            {
+                $PreBalance = $final_pre_sum_debit - $final_pre_sum_credit;
+                $preDebCre = 'De';
+            }else{
+                $PreBalance = $final_pre_sum_credit - $final_pre_sum_debit;
+                $preDebCre = 'Cr';
+            }
+
+
+
+
+            $oResultAssets = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','A')
+                ->whereBetween('transactions.date', [$date_from, $date_to])
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            $oResultIncomes = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','I')
+                ->whereBetween('transactions.date', [$date_from, $date_to])
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            $oResultExpenses = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','E')
+                ->whereBetween('transactions.date', [$date_from, $date_to])
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+
+            $oResultLiabilities = DB::table('transactions')
+                ->join('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                ->select('transactions.account_no','accounts.HeadName', DB::raw('SUM(transactions.debit) as debit, SUM(transactions.credit) as credit'))
+                ->where('transactions.is_approved','approved')
+                ->where('transactions.account_type','L')
+                ->whereBetween('transactions.date', [$date_from, $date_to])
+                ->groupBy('transactions.account_no')
+                ->groupBy('accounts.HeadName')
+                ->get();
+        }
+
+
+        return view('backend.account.trial_balance_print', compact('date_from','date_to','oResultAssets','oResultIncomes','oResultExpenses','oResultLiabilities','PreBalance','preDebCre'));
+    }
 
     public function balance_sheet()
     {
@@ -533,6 +693,7 @@ class TransactionController extends Controller
             ->latest()
             ->pluck('voucher_no')
             ->first();
+       // dd($current_voucher_no);
         if(!empty($current_voucher_no)){
             $voucher_no = $current_voucher_no + 1;
         }else{
@@ -543,6 +704,7 @@ class TransactionController extends Controller
     }
 
     public function transactionDelete($voucher_type_id, $voucher_no){
+        //dd('bg');
         DB::table('transactions')->where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->delete();
 
         Toastr::success('Transactions Deleted Successfully', 'Success');

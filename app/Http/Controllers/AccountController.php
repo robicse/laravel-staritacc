@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Account;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -326,8 +327,8 @@ class AccountController extends Controller
             $cash_prevalance_data = DB::table('transactions')
                 ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
                 ->where('date', '<',$request->date_from)
-                ->where('account_no','10101')
-                ->where('is_approved','pending')
+                ->where('account_no','10201')
+                ->where('is_approved','approved')
                 ->groupBy('account_no')
                 ->first();
 
@@ -353,7 +354,7 @@ class AccountController extends Controller
                     ->where('is_approved','approved')
                     ->whereBetween('date', [$request->date_from, $request->date_to])
                     ->where(function ($query) {
-                        $query->where('account_no','=','10101')  // cash
+                        $query->where('account_no','=','10201')  // cash
                         ->orWhere('account_no','LIKE','10201%') // bank
                         ->Where('bank_user','=','Inventories'); // bank
                     })
@@ -362,7 +363,7 @@ class AccountController extends Controller
                 $cash_data_results = DB::table('transactions')
                     ->where('is_approved','approved')
                     ->where(function ($query) {
-                        $query->where('account_no','=','10101')  // cash
+                        $query->where('account_no','=','10201')  // cash
                         ->orWhere('account_no','LIKE','10201%') // bank
                         ->Where('bank_user','=','Inventories'); // bank
                     })
@@ -382,6 +383,7 @@ class AccountController extends Controller
             $date_to = $request->date_to;
         }
 //dd($cash_prevalance_data);
+//dd($cash_data_results);
         return view('backend.account.cashbook', compact('cash_data_results', 'PreBalance', 'preDebCre','date_from','date_to'));
     }
 
@@ -396,7 +398,7 @@ class AccountController extends Controller
         $cash_prevalance_data = DB::table('transactions')
             ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
             ->where('date', '<',$date_from)
-            ->where('account_no','10101')
+            ->where('account_no','10201')
             ->where('is_approved','approved')
             ->groupBy('account_no')
             ->first();
@@ -420,13 +422,13 @@ class AccountController extends Controller
         if( (!empty($date_from)) && (!empty($date_to)) )
         {
             $cash_data_results = DB::table('transactions')
-                ->where('account_no','10101')
+                ->where('account_no','10201')
                 ->where('is_approved','approved')
                 ->whereBetween('date', [$date_from, $date_to])
                 ->get();
         }else{
             $cash_data_results = DB::table('transactions')
-                ->where('account_no','10101')
+                ->where('account_no','10201')
                 ->where('is_approved','approved')
                 ->get();
         }
@@ -452,12 +454,13 @@ class AccountController extends Controller
     public function view_debit_voucher(Request $request)
     {
         $general_ledger = $request->general_ledger;
+        //dd($general_ledger);
         $date_from = $request->date_from;
         $date_to = $request->date_to;
-
         $acc_name = Account::where('HeadCode',$request->general_ledger)->pluck('HeadName')->first();
-
-
+        $transaction_no = Account::where('HeadCode',$request->general_ledger)->pluck('id')->first();
+        $transaction = Transaction::where('account_id',$transaction_no)->pluck('id')->first();
+//dd($acc_name);
         if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
         {
             //echo 'okk';exit;
@@ -482,7 +485,7 @@ class AccountController extends Controller
 
         //dd($general_ledger_infos);
 
-        return view('backend.account.debit_voucher_view', compact('general_ledger_infos', 'general_ledger', 'date_from', 'date_to','acc_name'));
+        return view('backend.account.debit_voucher_view', compact('general_ledger_infos', 'general_ledger', 'date_from', 'date_to','acc_name','transaction'));
     }
 
 
@@ -490,6 +493,12 @@ class AccountController extends Controller
     {
 //echo ($transaction_head->account_no);
 //exit;
+
+        $transaction_no = Account::where('HeadCode',$transaction_head)->pluck('id')->first();
+        $transaction = Transaction::where('account_id',$transaction_no)->pluck('id')->first();
+        //dd($transaction);
+        $acc_name = Account::where('HeadCode',$transaction_head)->pluck('HeadName')->first();
+        //dd($acc_name);
         if( (!empty($transaction_head)) && (!empty($date_from)) && (!empty($date_to)) )
         {
             $gl_prevalance_data = DB::table('transactions')
@@ -546,7 +555,7 @@ class AccountController extends Controller
 
         //dd($general_ledger_infos);
 
-        return view('backend.account.debit_voucher_print', compact('general_ledger_infos','PreBalance', 'preDebCre', 'transaction_head', 'date_from', 'date_to'));
+        return view('backend.account.debit_voucher_print', compact('acc_name','transaction','general_ledger_infos','PreBalance', 'preDebCre', 'transaction_head', 'date_from', 'date_to'));
     }
 
 
@@ -566,7 +575,9 @@ class AccountController extends Controller
         $date_from = $request->date_from;
         $date_to = $request->date_to;
         $acc_name = Account::where('HeadCode',$request->general_ledger)->pluck('HeadName')->first();
-
+        $transaction_no = Account::where('HeadCode',$request->general_ledger)->pluck('id')->first();
+        $transaction = Transaction::where('account_id',$transaction_no)->pluck('id')->first();
+        //dd($transaction);
         if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
         {
             //echo 'okk';exit;
@@ -591,12 +602,15 @@ class AccountController extends Controller
 
         //dd($general_ledger_infos);
 
-        return view('backend.account.credit_voucher_view', compact('general_ledger_infos', 'general_ledger', 'date_from', 'date_to','acc_name'));
+        return view('backend.account.credit_voucher_view', compact('general_ledger_infos', 'general_ledger', 'date_from', 'date_to','acc_name','transaction'));
     }
     public function credit_voucher_print($transaction_head,$date_from,$date_to)
     {
 //echo ($transaction_head->account_no);
 //exit;
+        $transaction_no = Account::where('HeadCode',$transaction_head)->pluck('id')->first();
+        $transaction = Transaction::where('account_id',$transaction_no)->pluck('id')->first();
+        $acc_name = Account::where('HeadCode',$transaction_head)->pluck('HeadName')->first();
         if( (!empty($transaction_head)) && (!empty($date_from)) && (!empty($date_to)) )
         {
             $gl_prevalance_data = DB::table('transactions')
@@ -653,6 +667,6 @@ class AccountController extends Controller
 
         //dd($general_ledger_infos);
 
-        return view('backend.account.credit_voucher_print', compact('general_ledger_infos','PreBalance', 'preDebCre', 'transaction_head', 'date_from', 'date_to'));
+        return view('backend.account.credit_voucher_print', compact('acc_name','transaction','general_ledger_infos','PreBalance', 'preDebCre', 'transaction_head', 'date_from', 'date_to'));
     }
 }
