@@ -16,7 +16,8 @@
                     <li class="breadcrumb-item" style="margin-left: 88%"> <a href="{!! route('productSales-invoice',$productSale->id) !!}" class="btn btn-sm btn-primary"  type="button">Print Invoice Page</a></li>
                 </ul>
                 <h3 class="tile-title">Product Sales</h3>
-                <table class="table table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                     </tr>
@@ -70,14 +71,16 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="tile-footer">
+                    <div class="tile-footer">
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-12">
             <div class="tile">
                 <h3 class="tile-title">Product Sales Details</h3>
-                <table class="table table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th>Category</th>
@@ -111,10 +114,11 @@
                     @endforeach
                     </tbody>
                 </table>
-                <div class="tile-footer">
-                    <ul class="app-breadcrumb breadcrumb">
-                        <li class="breadcrumb-item" style="margin-left: 83%"> <a href="{!! route('productSales-invoice-edit',$productSale->id) !!}" class="btn btn-sm btn-primary"  type="button">Print Invoice Edit Page</a></li>
-                    </ul>
+                    <div class="tile-footer">
+                        <ul class="app-breadcrumb breadcrumb">
+                            <li class="breadcrumb-item" style="margin-left: 83%"> <a href="{!! route('productSales-invoice-edit',$productSale->id) !!}" class="btn btn-sm btn-primary"  type="button">Print Invoice Edit Page</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

@@ -30,8 +30,8 @@
                     <br>
                     Account Name : {{ \App\Account::where('HeadCode', $general_ledger)->pluck('HeadName')->first() }}
                 </div>
-
-                <table class="table table-striped table-bordered">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th width="10%">Date</th>
@@ -185,6 +185,7 @@
                     </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
                 <div class="text-center">
                     <a href="{{ url('account/general-ledger-print/'.$general_ledger.'/'.$date_from.'/'.$date_to) }}" target="_blank" class="btn btn-sm btn-primary float-left">Print</a>

@@ -13,7 +13,8 @@
         <div class="col-md-12">
             <div class="tile">
                 <h3 class="tile-title">Product Table</h3>
-                <table id="example1" class="table table-bordered table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th width="5%">#Id</th>
@@ -53,6 +54,7 @@
                 <div class="tile-footer">
                 </div>
                 {{ $products->links() }}
+                </div>
             </div>
 
         </div>

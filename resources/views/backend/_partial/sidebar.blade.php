@@ -50,6 +50,12 @@
                 <li  style="background-color: gray"><a class="app-menu__item" href="{{ route('employee.create') }}"><span class="app-menu__label"> Create</span></a></li>
             </ul>
         </li>
+        <li class="treeview{{Request::is('domain/index*') || Request::is('domain/index*') ? ' is-expanded': ''}}"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">Domain </span><i class="treeview-indicator fa fa-angle-right"></i></a>
+            <ul class="treeview-menu">
+                <li  style="background-color: gray"><a class="app-menu__item" href="{{ route('domain.index') }}"><span class="app-menu__label"> Domain</span></a></li>
+                <li  style="background-color: gray"><a class="app-menu__item" href="{{ route('domain-renew.index') }}"><span class="app-menu__label"> Renew Domain</span></a></li>
+            </ul>
+        </li>
         <li class="treeview{{Request::is('employee-salary*') || Request::is('employee-salary*') ? ' is-expanded': ''}}"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-money"></i><span class="app-menu__label">Employee Salary </span><i class="treeview-indicator fa fa-angle-right"></i></a>
             <ul class="treeview-menu">
                 <li  style="background-color: gray"><a class="app-menu__item" href="{{ route('employee-salary.index') }}"><span class="app-menu__label"> List</span></a></li>

@@ -16,7 +16,8 @@
                 {{--                    <li class="breadcrumb-item" style="margin-left: 88%"> <a href="{!! route('productProductions-invoice',$productProduction->id) !!}" class="btn btn-sm btn-primary"  type="button">Print Invoice Page</a></li>--}}
                 {{--                </ul>--}}
                 <h3 class="tile-title">Product Productions</h3>
-                <table class="table table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                     </tr>
@@ -48,14 +49,16 @@
                     </tr>
                     </tbody>
                 </table>
-                <div class="tile-footer">
+                    <div class="tile-footer">
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-md-12">
             <div class="tile">
                 <h3 class="tile-title">Product Productions Details</h3>
-                <table class="table table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th>Service</th>
@@ -87,6 +90,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                </div>
 
             </div>
         </div>

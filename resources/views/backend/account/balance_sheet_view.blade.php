@@ -613,8 +613,8 @@
 
 
 
-
-                <table class="table table-bordered">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Particulars</th>
@@ -623,7 +623,9 @@
                     </thead>
                     <tbody></tbody>
                 </table>
-                <table class="table">
+                </div>
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <td colspan="2"><h6><strong>ASSETS</strong></h6></td>
@@ -730,15 +732,16 @@
                         </tr>
                     </tbody>
                 </table>
-                <div style="text-align: center">The annexed notes form a: integral part of these financial statements.</div>
-                <div style="width: 100%;padding-top: 80px;padding-bottom: 80px;">
-                    <table width="100%" cellpadding="1" cellspacing="20" style="margin-top: 50px">
-                        <tr>
-                            <td width="20%" style="border-top: solid 1px #000;" align="center">Prepared By</td>
-                            <td width="20%" style="border-top: solid 1px #000;" align="center">Accounts</td>
-                            <td  width="20%" style="border-top: solid 1px #000;" align='center'>Chairman</td>
-                        </tr>
-                    </table>
+                    <div style="text-align: center">The annexed notes form a: integral part of these financial statements.</div>
+                    <div style="width: 100%;padding-top: 80px;padding-bottom: 80px;">
+                        <table width="100%" cellpadding="1" cellspacing="20" style="margin-top: 50px">
+                            <tr>
+                                <td width="20%" style="border-top: solid 1px #000;" align="center">Prepared By</td>
+                                <td width="20%" style="border-top: solid 1px #000;" align="center">Accounts</td>
+                                <td  width="20%" style="border-top: solid 1px #000;" align='center'>Chairman</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="text-center">

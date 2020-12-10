@@ -30,8 +30,9 @@
                     <form method="post" action="{{ route('serviceSaleDetails.store') }}">
                         @csrf
 
-                        <input type="button" class="btn btn-primary add " style="   margin-left: 960px;" value="Add More Product">
-                        <table class="table table-striped">
+                        <div class="table-responsive">
+                            <input type="button" class="btn btn-primary add " style="   margin-left: 960px;" value="Add More Product">
+                            <table id="example1" class="table table-bordered table-striped">
                             <thead>
                             <tr>
                                 <th >ID</th>
@@ -78,11 +79,12 @@
                             </tr>
                             </tfoot>
                         </table>
-                        <div class="form-group row">
+                            <div class="form-group row">
                             <label class="control-label col-md-3"></label>
                             <div class="col-md-8">
                                 <button class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i>Save Product Purchases</button>
                             </div>
+                        </div>
                         </div>
                     </form>
                 </div>

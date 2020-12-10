@@ -10,7 +10,8 @@
         <div class="col-md-12">
             <div class="tile">
                 <h5 class="tile-title">COA Print View</h5>
-                <table cellpadding="0" cellspacing="0" border="1px solid #000" width="99%" style="text-align: left" >
+                <div class="table-responsive">
+                     <table cellpadding="0" cellspacing="0" border="1px solid #000" width="99%" style="text-align: left" >
                     @php
                         $accounts = DB::table('accounts')
                             ->where('IsActive',1)
@@ -45,9 +46,10 @@
 
                     @endphp
                 </table>
-                <div class="row d-print-none mt-2">
-                    <div class="col-12 text-right">
-                        <input id="printpagebutton" class=" btn btn-primary " type="button" value="Print Now" onclick="printpage()"/>
+                    <div class="row d-print-none mt-2">
+                        <div class="col-12 text-right">
+                            <input id="printpagebutton" class=" btn btn-primary " type="button" value="Print Now" onclick="printpage()"/>
+                        </div>
                     </div>
                 </div>
             </div>

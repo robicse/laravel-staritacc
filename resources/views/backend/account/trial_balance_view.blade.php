@@ -10,7 +10,8 @@
         <div class="col-md-12">
             <div class="tile">
                 <h3 class="tile-title text-center">Month of from {{ $date_from }} to {{ $date_to }}</h3>
-                <table class="table table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th width="40%">Accounts Head</th>
@@ -243,6 +244,7 @@
                     </tr>
                     </tbody>
                 </table>
+                </div>
                 <div class="tile-footer">
                 </div>
             </div>

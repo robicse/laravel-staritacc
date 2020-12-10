@@ -16,7 +16,8 @@
             <div class="tile">
 
                 <h3 class="tile-title">Product POS Sales Table</h3>
-                <table id="example1" class="table table-bordered table-striped">
+                <div class="table-responsive">
+                    <table id="example1" class="table table-bordered table-striped">
 
                     <thead>
                     <tr>
@@ -116,7 +117,8 @@
                         @endforeach
                     </tbody>
                 </table>
-                <div class="tile-footer">
+                    <div class="tile-footer">
+                    </div>
                 </div>
             </div>
 

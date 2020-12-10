@@ -50,7 +50,8 @@
                         </div>
                     </form>
                     <h5 align="center">Cash Book Report from date {{ $date_from }} to date {{ $date_to }}</h5>
-                    <table class="table table-striped">
+                        <div class="table-responsive">
+                            <table id="example1" class="table table-bordered table-striped">
                         <thead>
                         <tr>
                             <th width="10%">Date</th>
@@ -209,6 +210,7 @@
                         </tr>
                         </tbody>
                     </table>
+                        </div>
                 </div>
                 <div class="tile-footer">
                 </div>

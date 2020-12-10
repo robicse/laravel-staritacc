@@ -60,6 +60,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('expenseCategory','ExpenseCategoryController');
     Route::resource('expenses','ExpenseController');
     Route::resource('serviceSale','ServiceSaleController');
+    Route::resource('domain','DomainController');
+    Route::resource('domain-renew','DomainRenewController');
 
     Route::get('dueList','ServiceSaleController@dueList')->name('dueList');
 
