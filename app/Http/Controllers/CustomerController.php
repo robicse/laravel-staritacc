@@ -122,11 +122,11 @@ class CustomerController extends Controller
     {
         $custmers = Customer::find($id);
         $custmers->delete_status = 1;
-        $custmers->save();
+        $custmers->delete();
 
-        $accounts = Account::where('ref_id',$id)->where('HeadType','A')->first();
-        $accounts->IsGL = 0;
-        $accounts->save();
+//        $accounts = Account::where('ref_id',$id)->where('HeadType','A')->first();
+//        $accounts->IsGL = 0;
+//        $accounts->delete();
 
         Toastr::success('Customer Deleted Successfully','Success');
         return  redirect()->route("customer.index");

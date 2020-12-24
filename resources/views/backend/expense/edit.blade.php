@@ -32,7 +32,7 @@
                             @csrf
                         <div class="form-group row">
                             <label class="control-label col-md-3 text-right">Expense Category  <small class="requiredCustom">*</small></label>
-                            <div class="col-md-5">
+                            <div class="col-md-8">
                                 <select name="expense_category_id" id="expense_category_id" class="form-control select2" required>
                                     <option value="">Select One</option>
                                     @foreach($officeCostingCategories as $officeCostingCategory)

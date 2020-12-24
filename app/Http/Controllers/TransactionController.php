@@ -26,10 +26,12 @@ class TransactionController extends Controller
     {
         //$transactions = Transaction::latest()->get();
         $transactions = DB::table('transactions')
-            ->select('voucher_type_id','voucher_no')
+            ->select('voucher_type_id','voucher_no','created_at')
+            ->groupBy('created_at')
             ->groupBy('voucher_type_id')
             ->groupBy('voucher_no')
-            //->latest()
+
+            ->latest()
             ->get();
         //dd($transactions);
         return view('backend.posting.index',compact('transactions'));
