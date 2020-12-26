@@ -77,12 +77,15 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        if(Auth::User()->getRoleNames()[0] == "Admin"){
+            $roles = Role::all();
+        }else{
+            $roles = Role::where('name','!=','Admin')->get();
+        }
         //$roles = Role::pluck('name','name')->all();
-        $roles = Role::all();
         //$roles = Role::where('name','!=','Admin')->pluck('name','name')->all();
         $userRole = $user->roles->pluck('name','name')->first();
         //dd($roles);
-
 
         return view('backend.user.edit',compact('user','roles','userRole'));
     }

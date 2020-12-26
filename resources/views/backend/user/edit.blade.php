@@ -46,9 +46,8 @@
                             @endif
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row" @if(Auth::User()->getRoleNames()[0] != "Admin") style="display: none" @endif>
                         <label for="" class="col-md-3 col-form-label text-md-right">Role <span style="color: red">*</span></label>
-
                         <div class="col-md-8">
                             <select class="form-control" name="roles[]">
                                 @foreach($roles as $role)
