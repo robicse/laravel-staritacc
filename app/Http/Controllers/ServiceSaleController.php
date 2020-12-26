@@ -244,11 +244,12 @@ class ServiceSaleController extends Controller
         //dd('ss');
         $auth_user_id = Auth::user()->id;
         $auth_user = Auth::user()->roles[0]->name;
-        if($auth_user == "Admin"){
-            $serviceSales = ServiceSale::where('due_amount','>',0)->latest()->get();
-        }else{
-            $serviceSales = ServiceSale::where('user_id',$auth_user_id)->where('due_amount','>',0)->get();
-        }
+//        if($auth_user == "Admin"){
+//            $serviceSales = ServiceSale::where('due_amount','>',0)->latest()->get();
+//        }else{
+//            $serviceSales = ServiceSale::where('user_id',$auth_user_id)->where('due_amount','>',0)->get();
+//        }
+        $serviceSales = ServiceSale::where('due_amount','>',0)->latest()->get();
         return view('backend.serviceSale.dueList',compact('serviceSales'));
     }
 

@@ -30,11 +30,11 @@
                             <td>{{ $service->name}}</td>
                             <td><img src="{{asset('uploads/service/'.$service->image)}}" alt="{{$service->name}}" style="height: 50px;width: 50px"></td>
                             <td>
-                                <a href="{{ route('service.edit',$service->id) }}" class="btn btn-sm btn-primary float-left"><i class="fa fa-edit"></i></a>
+                                <a href="{{ route('service.edit',$service->id) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
                                 <form method="post" action="{{ route('service.destroy',$service->id) }}" >
                                     @method('DELETE')
                                     @csrf
-                                    <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('You Are Sure This Delete !')"><i class="fa fa-trash"></i></button>
+                                    <button class="btn btn-sm btn-danger" style="margin-left: 5px" type="submit" onclick="return confirm('You Are Sure This Delete !')"><i class="fa fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>

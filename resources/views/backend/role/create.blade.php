@@ -55,6 +55,14 @@
                                 </div>
                             </div>--}}
 
+                        <div class="form-group row">
+                            <label for="all" class="col-md-4 col-form-label text-md-right">Check All <span style="color: red">*</span></label>
+                            <div class="col-md-6">
+                                <input type="checkbox" id="checkAll" style="margin-top: 12px;" />
+                                <hr />
+                            </div>
+                        </div>
+
 
                             <div class="form-group row">
                                 <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Permission') }} <span style="color: red">*</span></label>
@@ -65,7 +73,7 @@
                                             <label>{{ $value->controller_name }}</label>
                                         </div>
                                         <div class="col-md-6">
-                                            <label>{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) }}
+                                            <label>{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name','cb-element')) }}
                                                 {{ $value->name }}</label>
                                         </div>
                                         @endforeach
@@ -76,9 +84,9 @@
                                         <br/>
                                     @endforeach--}}
                                 </div>
-                                <div class="col-md-2">
-                                    <a href="" class="btn btn-warning btn-sm mx-1" data-toggle="modal" data-target="#exampleModal">Create Permission List</a>
-                                </div>
+{{--                                <div class="col-md-2">--}}
+{{--                                    <a href="" class="btn btn-warning btn-sm mx-1" data-toggle="modal" data-target="#exampleModal">Create Permission List</a>--}}
+{{--                                </div>--}}
                             </div>
 
                             <div class="form-group row mb-0">
@@ -125,5 +133,15 @@
         </div>
     </main>
 @endsection
+
+@push('js')
+    <script>
+        $(document).ready(function(){
+            $("#checkAll").click(function () {
+                $('input:checkbox').not(this).prop('checked', this.checked);
+            });
+        })
+    </script>
+@endpush
 
 

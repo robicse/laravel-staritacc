@@ -56,7 +56,7 @@
                                 @endforeach
                             @endif
                         </td>
-                        <td>
+                        <td class="d-inline-flex">
 {{--                            <a href="" class="btn{{$user->status == 0 ? ' btn-dark' : ' btn-primary' }}" onclick="event.preventDefault();document.getElementById('visibility-form-{{$user->id}}').submit();"><i class="{{$user->status == 0 ? 'fas fa-ban' : 'fas fa-skiing' }}"></i></a>--}}
 {{--                            <form id="visibility-form-{{$user->id}}" action="{{ route('user.active') }}" method="POST" style="display: none;">--}}
 {{--                                @csrf--}}
@@ -64,9 +64,9 @@
 {{--                            </form>--}}
 
                             {{--<a class="btn btn-info" href="{{ route('users.show',$user->id) }}">Show</a>--}}
-                            <a class="btn btn-primary" href="{{ route('users.edit',$user->id) }}">Edit</a>
-                            <a class="btn btn-info" href="{{ route('password.change_password',$user->id) }}">Edit Password</a>
-                            {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}
+                            <a class="btn btn-primary" style="margin-left: 5px" href="{{ route('users.edit',$user->id) }}">Edit</a>
+                            <a class="btn btn-info" style="margin-left: 5px" href="{{ route('password.change_password',$user->id) }}">Edit Password</a>
+                            {!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline;margin-left: 5px']) !!}
                             {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                             {!! Form::close() !!}
                             {{--<a href="" class="btn{{$user->user_role == 2 ? ' btn-dark' : ' btn-primary' }}" onclick="event.preventDefault();document.getElementById('visibility-form-{{$user->id}}').submit();"><i class="{{$user->user_role == 2 ? 'fas fa-ban' : 'fas fa-skiing' }}"></i></a>

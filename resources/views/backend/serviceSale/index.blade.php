@@ -43,13 +43,13 @@
                         </td>
 {{--                        @dd( $serviceSale->due->current_due);--}}
 
-                        <td>
+                        <td class="d-inline-flex">
                             <a href="{{ route('serviceSale.show',$serviceSale->id) }}" class="btn btn-sm btn-primary float-left" >show</a>
                             <a href="{{ route('serviceSale.edit',$serviceSale->id) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
                             <form method="post" action="{{ route('serviceSale.destroy',$serviceSale->id) }}" >
                                @method('DELETE')
                                 @csrf
-                                <button style="margin-top: 5px" class="btn btn-sm btn-danger" type="submit" onclick="return confirm('You Are Sure This Delete !')"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-sm btn-danger" style="margin-left: 5px" type="submit" onclick="return confirm('You Are Sure This Delete !')"><i class="fa fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>
