@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Store;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,13 +26,12 @@ class UserController extends Controller
         $this->middleware('permission:user-delete', ['only' => ['destroy']]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $auth_user = Auth::user()->roles[0]->name;
-        if($auth_user == "Admin") {
-            $users=User::latest()->get();
+        if(Auth::User()->getRoleNames()[0] == "Admin"){
+            $users=User::orderBy('id','DESC')->paginate(5);
         }else{
-            $users=User::where('id',Auth::user()->id)->get();
+            $users=User::where('id',Auth::User()->id)->get();
         }
 
         return view('backend.user.index',compact('users'));
@@ -40,7 +40,9 @@ class UserController extends Controller
     public function create()
     {
         //$roles = Role::pluck('name','name')->all();
-        $roles = Role::where('name','!=','Admin')->pluck('name','name')->all();
+        //$roles = Role::where('name','!=','Admin')->pluck('name','name')->all();
+        $roles = Role::where('name','!=','Admin')->get();
+        //dd($roles);
         return view('backend.user.create',compact('roles'));
     }
 
@@ -52,18 +54,16 @@ class UserController extends Controller
             'password' => 'required|same:confirm-password',
             'roles' => 'required'
         ]);
-
+        //dd($request->all());
 
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
 
         $user = User::create($input);
+        $user->update();
         $user->assignRole($request->input('roles'));
 
-
-        /*return redirect()->route('users.index')
-            ->with('success','User created successfully');*/
         Toastr::success('User Created Successfully');
         return redirect()->route('users.index');
     }
@@ -78,13 +78,10 @@ class UserController extends Controller
     {
         $user = User::find($id);
         //$roles = Role::pluck('name','name')->all();
-        $auth_user = Auth::user()->roles[0]->name;
-        if($auth_user == "Admin") {
-            $roles = Role::pluck('name','name')->all();
-        }else{
-            $roles = Role::where('name', '!=', 'Admin')->pluck('name', 'name')->all();
-        }
-        $userRole = $user->roles->pluck('name','name')->all();
+        $roles = Role::all();
+        //$roles = Role::where('name','!=','Admin')->pluck('name','name')->all();
+        $userRole = $user->roles->pluck('name','name')->first();
+        //dd($roles);
 
 
         return view('backend.user.edit',compact('user','roles','userRole'));
@@ -109,6 +106,8 @@ class UserController extends Controller
 
 
         $user = User::find($id);
+        $user->update();
+        // second
         $user->update($input);
         DB::table('model_has_roles')->where('model_id',$id)->delete();
 
