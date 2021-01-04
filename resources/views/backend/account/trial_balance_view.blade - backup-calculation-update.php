@@ -63,9 +63,6 @@
 
                                 $sum_debit += $oResultAsset->debit;
                                 $sum_credit += $oResultAsset->credit;
-
-                                $oResultAssetDebit = $oResultAsset->debit;
-                                $oResultAssetCredit = $oResultAsset->credit;
                             @endphp
                             <tr>
                                 <td>{{ $oResultAsset->HeadName }}</td>
@@ -73,11 +70,11 @@
                                 <td>{{ $oResultAsset->credit }}</td>
                                 <td>
                                     @php
-                                        if($oResultAssetDebit > $oResultAssetCredit){
-                                            echo $oResultAssetDebit - $oResultAssetCredit;
+                                        if($sum_debit > $sum_credit){
+                                            echo $sum_debit - $sum_credit;
                                             echo 'De';
                                         }else{
-                                            echo $oResultAssetCredit - $oResultAssetDebit;
+                                            echo $sum_credit - $sum_debit;
                                             echo 'Cr';
                                         }
                                     @endphp
@@ -88,17 +85,7 @@
                             <th>Total:</th>
                             <th>Debit: {{ $sum_assets_debit }}</th>
                             <th>Credit: {{ $sum_assets_credit }}</th>
-                            <th>
-                                @php
-                                    if($sum_assets_debit > $sum_assets_credit){
-                                        echo $sum_assets_debit - $sum_assets_credit;
-                                        echo 'De';
-                                    }else{
-                                        echo $sum_assets_credit - $sum_assets_debit;
-                                        echo 'Cr';
-                                    }
-                                @endphp
-                            </th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -116,9 +103,6 @@
 
                                 $sum_debit += $oResultIncome->debit;
                                 $sum_credit += $oResultIncome->credit;
-
-                                $oResultIncomeDebit = $oResultIncome->debit;
-                                $oResultIncomeCredit = $oResultIncome->credit;
                             @endphp
                             <tr>
                                 <td>{{ $oResultIncome->HeadName }}</td>
@@ -126,11 +110,11 @@
                                 <td>{{ $oResultIncome->credit }}</td>
                                 <td>
                                     @php
-                                        if($oResultIncomeDebit > $oResultIncomeCredit){
-                                            echo $oResultIncomeDebit - $oResultIncomeCredit;
+                                        if($sum_debit > $sum_credit){
+                                            echo $sum_debit - $sum_credit;
                                             echo 'De';
                                         }else{
-                                            echo $oResultIncomeCredit - $oResultIncomeDebit;
+                                            echo $sum_credit - $sum_debit;
                                             echo 'Cr';
                                         }
                                     @endphp
@@ -141,17 +125,7 @@
                             <th>Total:</th>
                             <th>Debit: {{ $sum_income_debit }}</th>
                             <th>Credit: {{ $sum_income_credit }}</th>
-                            <th>
-                                @php
-                                    if($sum_income_debit > $sum_income_credit){
-                                        echo $sum_income_debit - $sum_income_credit;
-                                        echo 'De';
-                                    }else{
-                                        echo $sum_income_credit - $sum_income_debit;
-                                        echo 'Cr';
-                                    }
-                                @endphp
-                            </th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -169,9 +143,6 @@
 
                                 $sum_debit += $oResultExpense->debit;
                                 $sum_credit += $oResultExpense->credit;
-
-                                $oResultExpenseDebit = $oResultExpense->debit;
-                                $oResultExpenseCredit = $oResultExpense->credit;
                             @endphp
                             <tr>
                                 <td>{{ $oResultExpense->HeadName }}</td>
@@ -179,11 +150,11 @@
                                 <td>{{ $oResultExpense->credit }}</td>
                                 <td>
                                     @php
-                                        if($oResultExpenseDebit > $oResultExpenseCredit){
-                                            echo $oResultExpenseDebit - $oResultExpenseCredit;
+                                        if($sum_debit > $sum_credit){
+                                            echo $sum_debit - $sum_credit;
                                             echo 'De';
                                         }else{
-                                            echo $oResultExpenseCredit - $oResultExpenseDebit;
+                                            echo $sum_credit - $sum_debit;
                                             echo 'Cr';
                                         }
                                     @endphp
@@ -194,17 +165,7 @@
                             <th>Total:</th>
                             <th>Debit: {{ $sum_expense_debit }}</th>
                             <th>Credit: {{ $sum_expense_credit }}</th>
-                            <th>
-                                @php
-                                    if($sum_expense_debit > $sum_expense_credit){
-                                        echo $sum_expense_debit - $sum_expense_credit;
-                                        echo 'De';
-                                    }else{
-                                        echo $sum_expense_credit - $sum_expense_debit;
-                                        echo 'Cr';
-                                    }
-                                @endphp
-                            </th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -222,9 +183,6 @@
 
                                 $sum_debit += $oResultLiabilitie->debit;
                                 $sum_credit += $oResultLiabilitie->credit;
-
-                                $oResultLiabilitieDebit = $oResultLiabilitie->debit;
-                                $oResultLiabilitieCredit = $oResultLiabilitie->credit;
                             @endphp
                             <tr>
                                 <td>{{ $oResultLiabilitie->HeadName }}</td>
@@ -232,11 +190,11 @@
                                 <td>{{ $oResultLiabilitie->credit }}</td>
                                 <td>
                                     @php
-                                        if($oResultLiabilitieDebit > $oResultLiabilitieCredit){
-                                            echo $oResultLiabilitieDebit - $oResultLiabilitieCredit;
+                                        if($sum_debit > $sum_credit){
+                                            echo $sum_debit - $sum_credit;
                                             echo 'De';
                                         }else{
-                                            echo $oResultLiabilitieCredit - $oResultLiabilitieDebit;
+                                            echo $sum_credit - $sum_debit;
                                             echo 'Cr';
                                         }
                                     @endphp
@@ -247,17 +205,7 @@
                             <th>Total:</th>
                             <th>Debit: {{ $sum_liability_debit }}</th>
                             <th>Credit: {{ $sum_liability_credit }}</th>
-                            <th>
-                                @php
-                                    if($sum_liability_debit > $sum_liability_credit){
-                                        echo $sum_liability_debit - $sum_liability_credit;
-                                        echo 'De';
-                                    }else{
-                                        echo $sum_liability_credit - $sum_liability_debit;
-                                        echo 'Cr';
-                                    }
-                                @endphp
-                            </th>
+                            <th>&nbsp;</th>
                         </tr>
                     @endif
                     @php
@@ -290,8 +238,8 @@
                     @endif
                     <tr style="background-color: green;">
                         <th>Final Total:</th>
-                        <th>Debit: {{ $sum_debit }}</th>
-                        <th>Credit: {{ $sum_credit }}</th>
+                        <th>Debit: {{ $final_sum_credit }}</th>
+                        <th>Credit: {{ $final_sum_debit }}</th>
                         <th>&nbsp;</th>
                     </tr>
                     </tbody>
