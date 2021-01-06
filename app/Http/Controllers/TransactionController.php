@@ -131,7 +131,7 @@ class TransactionController extends Controller
             'account_id'=> 'required',
         ]);
 
-        $row_count = count($request->account_id);
+        $row_count = count($request->transaction_id);
         $total_amount = 0;
         for($i=0; $i<$row_count;$i++)
         {
@@ -152,18 +152,13 @@ class TransactionController extends Controller
             $account_id = $request->account_id[$i];
             $accounts = Account::where('id',$account_id)->first();
 
+            $transaction_id = $request->transaction_id[$i];
+            //dd($transaction_id);
 
 
-            // Transaction
-            $transactions= Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
-            //dd($transactions);
+            $transactions = Transaction::find($transaction_id);
             $transactions->voucher_type_id = $request->voucher_type_id;
-            $transactions->voucher_no = $request->voucher_no;
-//            if ($request->voucher_no + 2000)
-//            {
-//                Toastr::warning('voucher no already exists Successfully', 'Success');
-//                return back();
-//            }
+            $transactions->voucher_no = $request->voucher_no ;
             $transactions->date = $request->date;
             $transactions->account_id = $account_id;
             $transactions->account_name = $accounts->HeadName;
@@ -182,13 +177,13 @@ class TransactionController extends Controller
         return redirect()->route('transaction.index');
     }
 
-    public function destroy($id)
-    {
-        $transactions = Transaction::find($id);
-        $transactions->delete();
-        Toastr::success('Posting Deleted Successfully', 'Success');
-        return redirect()->route('transaction.index');
-    }
+//    public function destroy($id)
+//    {
+//        $transactions = Transaction::find($id);
+//        $transactions->delete();
+//        Toastr::success('Posting Deleted Successfully', 'Success');
+//        return redirect()->route('transaction.index');
+//    }
 
     public function voucher_invoice($voucher_type_id,$voucher_no)
     {

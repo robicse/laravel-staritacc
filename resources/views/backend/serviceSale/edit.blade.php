@@ -86,10 +86,10 @@
                                 </td>
                                 <td width="15%" >
                                     <div id="service_sub_category_id_1">
-                                        <select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" onchange="getval(1,this);" required>
+                                        <select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" onchange="getval(1,this);" readonly>
                                             <option value="">Select  Sub Category</option>
                                             @foreach($serviceSubCategories as $serviceSubCategory)
-                                                <option value="{{$serviceSubCategory->id}}" >{{$serviceSubCategory->name}}</option>
+                                                <option value="{{$serviceSubCategory->id}}" {{$serviceSubCategory->id == $serviceSalesDetail->service_sub_category_id ? 'selected' : ''}}>{{$serviceSubCategory->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -217,10 +217,7 @@
                 $('#content').toggle('show');
             });
 
-
-
         });
-
 
         // ajax
         function getval(row,sel)
@@ -248,9 +245,6 @@
                 }
             })
         }
-
-
-
 
         $(function() {
             $('#check_number').hide();
