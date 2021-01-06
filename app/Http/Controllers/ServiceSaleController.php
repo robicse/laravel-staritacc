@@ -7,6 +7,7 @@ use App\Due;
 use App\Service;
 use App\ServiceSale;
 use App\ServiceSaleDetail;
+use App\ServiceSubCategory;
 use App\ServiceUnit;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
@@ -35,9 +36,10 @@ class ServiceSaleController extends Controller
     {
         $customers = Customer::all();
         $services = Service::all();
+        $serviceSubCategories = ServiceSubCategory::all();
         $units = ServiceUnit::all();
         $serviceSales = ServiceSale::all();
-        return view('backend.serviceSale.create',compact('customers','services','serviceSales','units'));
+        return view('backend.serviceSale.create',compact('customers','services','serviceSales','units','serviceSubCategories'));
     }
 
 
@@ -102,9 +104,10 @@ class ServiceSaleController extends Controller
         $customers = Customer::all();
         $services = Service::all();
         $serviceSales = ServiceSale::find($id);
+        $serviceSubCategories = ServiceSubCategory::all();
         $serviceSalesDetails = ServiceSaleDetail::where('service_sale_id',$id)->get();
 
-        return view('backend.serviceSale.show',compact('customers','services','serviceSales','serviceSalesDetails'));
+        return view('backend.serviceSale.show',compact('customers','services','serviceSales','serviceSalesDetails','serviceSubCategories'));
     }
 
     public function edit($id)
@@ -113,9 +116,11 @@ class ServiceSaleController extends Controller
         $services = Service::all();
         $units = ServiceUnit::all();
         $serviceSales = ServiceSale::find($id);
+        $serviceSubCategories = ServiceSubCategory::all();
         $serviceSalesDetails = ServiceSaleDetail::where('service_sale_id',$id)->get();
+        //dd($serviceSales);
 
-        return view('backend.serviceSale.edit',compact('customers','services','serviceSales','serviceSalesDetails','units'));
+        return view('backend.serviceSale.edit',compact('customers','services','serviceSales','serviceSalesDetails','units','serviceSubCategories'));
     }
 
 
@@ -194,23 +199,68 @@ class ServiceSaleController extends Controller
     }
     public function serviceRelationData(Request $request){
 
-        //$options = 'hello';
-        $current_row = $request->current_row;
+//        //$options = 'hello';
+//        $current_row = $request->current_row;
+//        $service_id = $request->current_service_id;
+//        $service_unit_name = DB::table('service_units')
+//            ->join('services','service_units.id','=','services.service_unit_id')
+//            ->where('services.id',$service_id)
+//            ->pluck('service_units.name')
+//            ->first();
+//
+//
+//        $option = [
+//            'current_row' => $current_row,
+//            'service_unit_name' => $service_unit_name,
+//        ];
+//
+//        return response()->json(['success'=>true,'data'=>$option]);
+
+
+
         $service_id = $request->current_service_id;
-        $service_unit_name = DB::table('service_units')
-            ->join('services','service_units.id','=','services.service_unit_id')
-            ->where('services.id',$service_id)
-            ->pluck('service_units.name')
-            ->first();
 
-
-        $option = [
-            'current_row' => $current_row,
-            'service_unit_name' => $service_unit_name,
+        $service_sub_category_id = Service::where('id',$service_id)->pluck('service_sub_category_id')->first();
+        $service_unit_id = Service::where('id',$service_id)->pluck('service_unit_id')->first();
+        $options = [
+            'subCategoryOptions' => '',
+            'unitOptions' => '',
         ];
 
-        return response()->json(['success'=>true,'data'=>$option]);
-    }
+
+        if(!empty($service_sub_category_id)){
+            $subCategories = ServiceSubCategory::where('id',$service_sub_category_id)->get();
+            if(count($subCategories) > 0){
+                $options['subCategoryOptions'] = "<select class='form-control' name='service_sub_category_id[]' readonly>";
+                foreach($subCategories as $subCategory){
+                    $options['subCategoryOptions'] .= "<option value='$subCategory->id'>$subCategory->name</option>";
+                }
+                $options['subCategoryOptions'] .= "</select>";
+            }
+        }else{
+            $options['subCategoryOptions'] = "<select class='form-control' name='service_sub_category_id[]' readonly>";
+            $options['subCategoryOptions'] .= "<option value=''>No Data Found!</option>";
+            $options['subCategoryOptions'] .= "</select>";
+        }
+
+        if($service_unit_id){
+            $units = ServiceUnit::where('id',$service_unit_id)->get();
+            if(count($units) > 0){
+                $options['unitOptions'] = "<select class='form-control' name='service_unit_id[]' readonly>";
+                foreach($units as $unit){
+                    $options['unitOptions'] .= "<option value='$unit->id'>$unit->name</option>";
+                }
+                $options['unitOptions'] .= "</select>";
+            }
+        }else{
+            $options['unitOptions'] = "<select class='form-control' name='service_unit_id[]' readonly>";
+            $options['unitOptions'] .= "<option value=''>No Data Found!</option>";
+            $options['unitOptions'] .= "</select>";
+        }
+
+        return response()->json(['success'=>true,'data'=>$options]);
+
+}
     public function payDue(Request $request)
     {
         //dd($request->all());

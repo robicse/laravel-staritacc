@@ -19,7 +19,7 @@
                     <tr>
                         <th width="5%">#Id</th>
                         <th width="10%">Service Name</th>
-                        <th width="10%">Image</th>
+                        <th width="10%">Service Sub Category</th>
                         <th width="15%">Action</th>
                     </tr>
                     </thead>
@@ -28,7 +28,8 @@
                         <tr>
                             <td>{{ $key+1 }}</td>
                             <td>{{ $service->name}}</td>
-                            <td><img src="{{asset('uploads/service/'.$service->image)}}" alt="{{$service->name}}" style="height: 50px;width: 50px"></td>
+                            <td>{{ $service->ServiceSubCategory->name}}</td>
+{{--                            <td><img src="{{asset('uploads/service/'.$service->image)}}" alt="{{$service->name}}" style="height: 50px;width: 50px"></td>--}}
                             <td>
                                 <a href="{{ route('service.edit',$service->id) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
                                 <form method="post" action="{{ route('service.destroy',$service->id) }}" >

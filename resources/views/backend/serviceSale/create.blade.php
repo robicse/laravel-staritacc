@@ -62,6 +62,7 @@
                             <tr>
                                 <th >ID</th>
                                 <th>Service <small class="requiredCustom">*</small></th>
+                                <th >Sub Category</th>
                                 <th>Qty <small class="requiredCustom">*</small></th>
                                 <th>Price <small class="requiredCustom">*</small></th>
                                 <th>Unit <small class="requiredCustom">*</small></th>
@@ -83,17 +84,34 @@
                                         @endforeach
                                     </select>
                                 </td>
+                                <td width="15%" >
+                                    <div id="service_sub_category_id_1">
+                                        <select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" >
+                                            <option value="">Select  Sub Category</option>
+                                            @foreach($serviceSubCategories as $serviceSubCategory)
+                                                <option value="{{$serviceSubCategory->id}}">{{$serviceSubCategory->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </td>
                                 <td>
                                     <input type="text" min="1" max="" class="qty form-control" name="qty[]" value="" required >
                                 </td>
                                 <td>
                                     <input type="text" min="1" max="" class="price form-control" name="price[]" value="" required >
                                 </td>
-                                <td>
-                                    <input type="text" class="form-control" id="service_unit_id_1" readonly>
+                                <td  width="10%">
+                                    <div id="service_unit_id_1">
+                                        <select class="form-control service_unit_id select2" name="service_unit_id[]">
+                                            <option value="">Select  Unit</option>
+                                            @foreach($units as $unit)
+                                                <option value="{{$unit->id}}">{{$unit->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input type="text" class=" form-control" id="discount_amount" name="vat[]" onkeyup="discountAmount('')" value="0" >
+                                    <input type="text" class="vat form-control"  name="vat[]" onkeyup="discountAmount('')" value="0" >
                                 </td>
                                 <td>
                                     <input type="text" class="amount form-control" name="sub_total[]">
@@ -166,19 +184,19 @@
             store_total_amount = parseInt(store_total_amount);
             console.log('total= ' + typeof store_total_amount);
 
-            var discount_amount = $('#discount_amount').val();
-            console.log('discount_amount= ' + discount_amount);
-            console.log('discount_amount= ' + typeof discount_amount);
-            discount_amount = parseInt(discount_amount);
-            console.log('discount_amount= ' + typeof discount_amount);
-
-            if(discount_type == 'flat'){
-                var final_amount = store_total_amount - discount_amount;
-            }
-            else{
-                var per = (store_total_amount*discount_amount)/100;
-                var final_amount = store_total_amount - per;
-            }
+            // var discount_amount = $('#discount_amount').val();
+            // console.log('discount_amount= ' + discount_amount);
+            // console.log('discount_amount= ' + typeof discount_amount);
+            // discount_amount = parseInt(discount_amount);
+            // console.log('discount_amount= ' + typeof discount_amount);
+            //
+            // if(discount_type == 'flat'){
+            //     var final_amount = store_total_amount - discount_amount;
+            // }
+            // else{
+            //     var per = (store_total_amount*discount_amount)/100;
+            //     var final_amount = store_total_amount - per;
+            // }
             console.log('final_amount= ' + final_amount);
             console.log('final_amount= ' + typeof final_amount);
 
@@ -203,31 +221,20 @@
 
             $('.backmoney').val(due);
         }
-        // function totalAmount(){
-        //     var t = 0;
-        //     $('.amount').each(function(i,e){
-        //         var amt = $(this).val()-0;
-        //         t += amt;
-        //     });
-        //     $('#total_amount').val(t);
-        //     $('#due_amount').val(t);
-        // }
+
         $(function () {
-            // $('.getmoney').change(function(){
-            //     var total = $('#total_amount').val();
-            //     var getmoney = $(this).val();
-            //     var t = total - getmoney;
-            //     $('.backmoney').val(t);
-            // });
+
             $('.add').click(function () {
                 var service = $('.service_id').html();
+                var serviceSubCategory = $('.service_sub_category_id').html();
                 var unit = $('.service_unit_id').html();
                 var n = ($('.neworderbody tr').length - 0) + 1;
                 var tr = '<tr><td class="no">' + n + '</td>' +
                     '<td><select class="form-control service_id select2" name="service_id[]" id="service_id_'+n+'" onchange="getval('+n+',this);" required>' + service + '</select></td>' +
+                    '<td><div id="service_sub_category_id_'+n+'"><select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" readonly="">' + serviceSubCategory + '</select></div></td>' +
                     '<td><input type="text" min="1" max="" class="qty form-control" name="qty[]" required></td>' +
                     '<td><input type="text" min="1" max="" class="price form-control" name="price[]" value="" required></td>' +
-                    '<td><input type="text" class="form-control" id="service_unit_id_'+n+'" readonly></td>' +
+                    '<td><div id="service_unit_id_'+n+'"><select class="form-control service_unit_id select2" name="service_unit_id[]" readonly="">' + unit + '</select></div></td>' +
                     '<td><input type="text" class="vat form-control" name="vat[]" required></td>' +
                     '<td><input type="text" class="amount form-control" name="sub_total[]" required></td>' +
                     '<td><input type="button" class="btn btn-danger delete" value="x"></td></tr>';
@@ -244,15 +251,26 @@
                 totalAmount();
             });
 
-            $('.neworderbody').delegate('.qty, .price', 'keyup', function () {
+            // $('.neworderbody').delegate('.qty, .price', 'keyup', function () {
+            //     var tr = $(this).parent().parent();
+            //     var qty = tr.find('.qty').val() - 0;
+            //     var price = tr.find('.price').val() - 0;
+            //     // var vat = tr.find('.vat').val() - 0;
+            //     // var totalPrice =( price+vat)
+            //
+            //     var total = (qty * price);
+            //
+            //
+            //     tr.find('.amount').val(total);
+            //     totalAmount();
+            // });
+            $('.neworderbody').delegate('.qty, .price , .vat', 'keyup', function () {
                 var tr = $(this).parent().parent();
                 var qty = tr.find('.qty').val() - 0;
                 var price = tr.find('.price').val() - 0;
-                // var vat = tr.find('.vat').val() - 0;
-                // var totalPrice =( price+vat)
+                var vat = tr.find('.vat').val() - 0;
 
-                var total = (qty * price);
-
+                var total = ((qty * price)+vat);
 
                 tr.find('.amount').val(total);
                 totalAmount();
@@ -268,7 +286,6 @@
 
         });
 
-
         // ajax
         function getval(row,sel)
         {
@@ -282,26 +299,19 @@
                 method : "get",
                 data : {
                     current_service_id : current_service_id,
-                    current_row : current_row,
                 },
                 success : function (res){
-                    console.log(res)
+                    //console.log(res)
                     console.log(res.data)
-                    //console.log(res.data.service_unit_name)
-                    //console.log(res.data.unitOptions)
-
-
-                        $("#service_unit_id_").val(res.data.service_unit_name);
-
-                    $("#service_unit_id_"+current_row).val(res.data.service_unit_name);
+                    console.log(res.data.subCategoryOptions)
+                    $("#service_sub_category_id_"+current_row).html(res.data.subCategoryOptions);
+                    $("#service_unit_id_"+current_row).html(res.data.unitOptions);
                 },
                 error : function (err){
                     console.log(err)
                 }
             })
         }
-
-
 
         $(function() {
             $('#check_number').hide();

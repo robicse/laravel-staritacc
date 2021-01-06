@@ -10,7 +10,7 @@
     <main class="app-content">
         <div class="app-title">
             <div>
-                <h1><i class=""></i> Add Service Sale </h1>
+                <h1><i class=""></i> Edit Service Sale </h1>
             </div>
             <ul class="app-breadcrumb breadcrumb">
                 <li class="breadcrumb-item">
@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-12">
             <div class="tile">
-                <h3 class="tile-title">Add Service Sale </h3>
+                <h3 class="tile-title">Edit Service Sale </h3>
                 <div class="tile-body tile-footer">
                     @if(session('response'))
                         <div class="alert alert-success">
@@ -61,6 +61,7 @@
                             <tr>
                                 <th >ID</th>
                                 <th>Service <small class="requiredCustom">*</small></th>
+                                <th >Sub Category</th>
                                 <th>Qty <small class="requiredCustom">*</small></th>
                                 <th>Price <small class="requiredCustom">*</small></th>
                                 <th>Unit <small class="requiredCustom">*</small></th>
@@ -82,6 +83,16 @@
                                             <option value="{{$service->id}}" {{$service->id == $serviceSalesDetail->service_id ? 'selected' : ''}}>{{$service->name}}</option>
                                         @endforeach
                                     </select>
+                                </td>
+                                <td width="15%" >
+                                    <div id="service_sub_category_id_1">
+                                        <select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" onchange="getval(1,this);" required>
+                                            <option value="">Select  Sub Category</option>
+                                            @foreach($serviceSubCategories as $serviceSubCategory)
+                                                <option value="{{$serviceSubCategory->id}}" >{{$serviceSubCategory->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </td>
                                 <td>
                                     <input type="number" min="1" max="" class="qty form-control" name="qty[]" value="{{$serviceSalesDetail->qty}}" required >
@@ -162,13 +173,16 @@
             });
             $('.add').click(function () {
                 var service = $('.service_id').html();
+                var serviceSubCategory = $('.service_sub_category_id').html();
                 var unit = $('.service_unit_id').html();
                 var n = ($('.neworderbody tr').length - 0) + 1;
                 var tr = '<tr><td class="no">' + n + '</td>' +
                     '<td><select class="form-control service_id select2" name="service_id[]" id="service_id_'+n+'" onchange="getval('+n+',this);" required>' + service + '</select></td>' +
+                    '<td><div id="service_sub_category_id_'+n+'"><select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" readonly="">' + serviceSubCategory + '</select></div></td>' +
                     '<td><input type="number" min="1" max="" class="qty form-control" name="qty[]" required></td>' +
                     '<td><input type="text" min="1" max="" class="price form-control" name="price[]" value="" required></td>' +
-                    '<td><select class="form-control service_unit_id select2" name="service_unit_id[]" id="service_unit_id_'+n+'" onchange="getval('+n+',this);" required>' + unit + '</select></td>' +
+                    '<td><div id="service_unit_id_'+n+'"><select class="form-control service_unit_id select2" name="service_unit_id[]" readonly="">' + unit + '</select></div></td>' +
+                    // '<td><select class="form-control service_unit_id select2" name="service_unit_id[]" id="service_unit_id_'+n+'" onchange="getval('+n+',this);" required>' + unit + '</select></td>' +
                     '<td><input type="text" class="vat form-control" name="vat[]" required></td>' +
                     '<td><input type="text" class="amount form-control" name="sub_total[]" required></td>' +
                     '<td><input type="button" class="btn btn-danger delete" value="x"></td></tr>';
@@ -185,7 +199,7 @@
                 totalAmount();
             });
 
-            $('.neworderbody').delegate('.qty, .price', 'keyup', function () {
+            $('.neworderbody').delegate('.qty, .price , .vat', 'keyup', function () {
                 var tr = $(this).parent().parent();
                 var qty = tr.find('.qty').val() - 0;
                 var price = tr.find('.price').val() - 0;
@@ -214,27 +228,29 @@
             //alert(row);
             //alert(sel.value);
             var current_row = row;
-            var current_serive_id = sel.value;
-
+            var current_service_id = sel.value;
 
             $.ajax({
-                url : "{{URL('product-relation-data')}}",
+                url : "{{URL('service-relation-data')}}",
                 method : "get",
                 data : {
-                    current_serive_id : current_serive_id
+                    current_service_id : current_service_id,
                 },
                 success : function (res){
+                    //console.log(res)
                     console.log(res.data)
-                    //console.log(res.data.categoryOptions)
-                    $("#product_category_id_"+current_row).html(res.data.categoryOptions);
-                    $("#product_sub_category_id_"+current_row).html(res.data.subCategoryOptions);
-                    $("#product_brand_id_"+current_row).html(res.data.brandOptions);
+                    console.log(res.data.subCategoryOptions)
+                    $("#service_sub_category_id_"+current_row).html(res.data.subCategoryOptions);
+                    $("#service_unit_id_"+current_row).html(res.data.unitOptions);
                 },
                 error : function (err){
                     console.log(err)
                 }
             })
         }
+
+
+
 
         $(function() {
             $('#check_number').hide();

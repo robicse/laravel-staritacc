@@ -20,7 +20,7 @@ class ServiceSubCategoryController extends Controller
 
     public function index()
     {
-        $subCategories = ServiceSubCategory::orderBy('id','desc')->paginate(5);
+        $subCategories = ServiceSubCategory::orderBy('id','desc')->latest()->get();
         return view('backend.services.subcategory.index', compact('subCategories'));
     }
 

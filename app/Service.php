@@ -13,4 +13,7 @@ class Service extends Model
     public function serviceUnit(){
         return $this->belongsTo('App\ServiceUnit');
     }
+    public function serviceSubCategory(){
+        return $this->belongsTo('App\ServiceSubCategory');
+    }
 }

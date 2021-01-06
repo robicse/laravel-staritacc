@@ -27,10 +27,9 @@
                             {{ session('response') }}
                         </div>
                     @endif
-{{--                    <form method="post" action="{{ route('transaction.update',$transactions->id)}}">--}}
-                    <form method="post" action="{{ url('account/transaction-update/'.$transactions->voucher_type_id.'/'.$transactions->voucher_no)}}">
+                    <form method="POST" action="{{ url('account/transaction-update/'.$transactions[0]->voucher_type_id.'/'.$transactions[0]->voucher_no)}}">
                         @csrf
-                        @method('PUT')
+{{--                        @method('PUT')--}}
                         <table class="table table-striped">
                             <tr>
                                 <th>
@@ -40,17 +39,17 @@
                                             <select class="form-control select2 " name="voucher_type_id" id="voucher_type_id" required>
                                                 <option value="">Select Voucher Type</option>
                                                 @foreach($voucherTypes as $voucherType)
-                                                    <option value="{{$voucherType->id}}"{{ $voucherType->id == $transactions ->voucher_type_id ? 'selected' : '' }}>{{$voucherType->name}} </option>
+                                                    <option value="{{$voucherType->id}}"{{ $voucherType->id == $transactions [0]->voucher_type_id ? 'selected' : '' }}>{{$voucherType->name}} </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label text-right">Voucher No <small class="requiredCustom">*</small></label>
-                                            <input type="number" name="voucher_no" id="voucher_no" class="form-control" value="{{$transactions ->voucher_no}}" disabled>
+                                            <input type="number" name="voucher_no" id="voucher_no" class="form-control" value="{{$transactions[0] ->voucher_no}}" disabled>
                                         </div>
                                         <div class="col-md-4">
                                             <label class="control-label text-right">Date  <small class="requiredCustom">*</small></label>
-                                            <input type="text" name="date" class="datepicker form-control" value="{{$transactions->date}}">
+                                            <input type="text" name="date" class="datepicker form-control" value="{{$transactions[0]->date}}">
                                         </div>
                                     </div>
                                 </th>
@@ -70,32 +69,33 @@
                             </tr>
                             </thead>
                             <tbody class="neworderbody">
+                            @foreach($transactions as $key => $transaction)
                             <tr>
                                 <td width="5%" class="no">1</td>
                                 <td>
                                     <select class="form-control account_id select2" name="account_id[]" id="account_id_1" required>
                                         <option value="">Select Account Name</option>
                                         @foreach($accounts as $account)
-                                            <option value="{{$account->id}}" {{ $transactions->account_id == $account->id ? 'selected' : ''}}>{{$account->HeadName}}</option>
+                                            <option value="{{$account->id}}" {{ $transaction->account_id == $account->id ? 'selected' : ''}}>{{$account->HeadName}}</option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td>
                                     <select class="form-control debit_or_credit select2" name="debit_or_credit[]" id="debit_or_credit_1" onchange="getval(1,this);" required>
                                         <option value="">Select One</option>
-                                        <option value="debit" {{ $transactions->debit != Null ? 'selected' : ''}}>Debit</option>
-                                        <option value="credit" {{$transactions->credit != Null ? 'selected' : '' }}>Credit</option>
+                                        <option value="debit" {{ $transaction->debit != Null ? 'selected' : ''}}>Debit</option>
+                                        <option value="credit" {{$transaction->credit != Null ? 'selected' : '' }}>Credit</option>
 
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" min="1" max="" class="price form-control" name="amount[]" value="{{ $transactions->debit == Null ? $transactions->credit : $transactions->debit  }}" required >
+                                    <input type="number" min="1" max="" class="price form-control" name="amount[]" value="{{ $transaction->debit == Null ? $transaction->credit : $transaction->debit  }}" required>
                                 </td>
                                 <td>
-                                    <textarea type="text" min="1" max="" rows="3" class="form-control"  name="transaction_description"> {!! $transactions->transaction_description !!}</textarea>
+                                    <textarea type="text" rows="3" class="form-control"  name="transaction_description"> {!! $transaction->transaction_description !!}</textarea>
                                 </td>
                             </tr>
-
+                            @endforeach
                             </tbody>
 
                             <tfoot>

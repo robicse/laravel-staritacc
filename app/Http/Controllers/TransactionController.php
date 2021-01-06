@@ -113,6 +113,7 @@ class TransactionController extends Controller
 
     public function transactionEdit( $voucher_type_id, $voucher_no)
     {
+        //dd($voucher_no);
         $voucherTypes=VoucherType::all();
         $accounts = Account::all();
         //$transactions = Transaction::find($id);;
@@ -124,6 +125,7 @@ class TransactionController extends Controller
 
     public function transactionUpdate(Request $request, $voucher_type_id, $voucher_no)
     {
+
         //dd($request->all());
         $this->validate($request, [
             'account_id'=> 'required',
@@ -149,16 +151,19 @@ class TransactionController extends Controller
 
             $account_id = $request->account_id[$i];
             $accounts = Account::where('id',$account_id)->first();
-            //dd($accounts);
+
+
+
             // Transaction
             $transactions= Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
+            //dd($transactions);
             $transactions->voucher_type_id = $request->voucher_type_id;
             $transactions->voucher_no = $request->voucher_no;
-            if ($request->voucher_no +2000)
-            {
-                Toastr::warning('voucher no already exists Successfully', 'Success');
-                return back();
-            }
+//            if ($request->voucher_no + 2000)
+//            {
+//                Toastr::warning('voucher no already exists Successfully', 'Success');
+//                return back();
+//            }
             $transactions->date = $request->date;
             $transactions->account_id = $account_id;
             $transactions->account_name = $accounts->HeadName;
@@ -168,7 +173,7 @@ class TransactionController extends Controller
             $transactions->debit = $debit;
             $transactions->credit = $credit;
             $transactions->transaction_description = $request->transaction_description;
-            //dd($serviceSaleDetails);
+           // dd($transactions);
             $transactions->save();
 
 
