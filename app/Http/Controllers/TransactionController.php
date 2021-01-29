@@ -131,7 +131,7 @@ class TransactionController extends Controller
             'account_id'=> 'required',
         ]);
 
-        $row_count = count($request->transaction_id);
+        $row_count = count($request->account_id);
         $total_amount = 0;
         for($i=0; $i<$row_count;$i++)
         {
@@ -155,21 +155,38 @@ class TransactionController extends Controller
             $transaction_id = $request->transaction_id[$i];
             //dd($transaction_id);
 
+            if(!empty($transaction_id)){
+                $transactions = Transaction::find($transaction_id);
+                $transactions->voucher_type_id = $request->voucher_type_id;
+                $transactions->voucher_no = $request->voucher_no ;
+                $transactions->date = $request->date;
+                $transactions->account_id = $account_id;
+                $transactions->account_name = $accounts->HeadName;
+                $transactions->parent_account_name = $accounts->PHeadName;
+                $transactions->account_no = $accounts->HeadCode;
+                $transactions->account_type = $accounts->HeadType;
+                $transactions->debit = $debit;
+                $transactions->credit = $credit;
+                $transactions->transaction_description = $request->transaction_description;
+                // dd($transactions);
+                $transactions->save();
+            }else{
+                $transactions = new Transaction();
+                $transactions->voucher_type_id = $request->voucher_type_id;
+                $transactions->voucher_no = $request->voucher_no ;
+                $transactions->date = $request->date;
+                $transactions->account_id = $account_id;
+                $transactions->account_name = $accounts->HeadName;
+                $transactions->parent_account_name = $accounts->PHeadName;
+                $transactions->account_no = $accounts->HeadCode;
+                $transactions->account_type = $accounts->HeadType;
+                $transactions->debit = $debit;
+                $transactions->credit = $credit;
+                $transactions->transaction_description = $request->transaction_description;
+//                 dd($transactions);
+                $transactions->save();
+            }
 
-            $transactions = Transaction::find($transaction_id);
-            $transactions->voucher_type_id = $request->voucher_type_id;
-            $transactions->voucher_no = $request->voucher_no ;
-            $transactions->date = $request->date;
-            $transactions->account_id = $account_id;
-            $transactions->account_name = $accounts->HeadName;
-            $transactions->parent_account_name = $accounts->PHeadName;
-            $transactions->account_no = $accounts->HeadCode;
-            $transactions->account_type = $accounts->HeadType;
-            $transactions->debit = $debit;
-            $transactions->credit = $credit;
-            $transactions->transaction_description = $request->transaction_description;
-           // dd($transactions);
-            $transactions->save();
 
 
         }
