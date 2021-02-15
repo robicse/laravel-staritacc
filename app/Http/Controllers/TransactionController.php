@@ -170,6 +170,7 @@ class TransactionController extends Controller
                 $transactions->transaction_description = $request->transaction_description;
                 // dd($transactions);
                 $transactions->save();
+                $created_at = $transactions->created_at;
             }else{
                 $transactions = new Transaction();
                 $transactions->voucher_type_id = $request->voucher_type_id;
@@ -183,6 +184,7 @@ class TransactionController extends Controller
                 $transactions->debit = $debit;
                 $transactions->credit = $credit;
                 $transactions->transaction_description = $request->transaction_description;
+                $transactions->created_at = $created_at;
 //                 dd($transactions);
                 $transactions->save();
             }
