@@ -127,6 +127,7 @@ class TransactionController extends Controller
     {
 
         //dd($request->all());
+<<<<<<< HEAD
             $this->validate($request, [
                 'account_id'=> 'required',
             ]);
@@ -137,6 +138,28 @@ class TransactionController extends Controller
             for($i=0; $i<$row_count;$i++)
             {
                 $total_amount += $request->amount[$i];
+=======
+        $this->validate($request, [
+            'account_id'=> 'required',
+        ]);
+
+        $row_count = count($request->account_id);
+        $total_amount = 0;
+        for($i=0; $i<$row_count;$i++)
+        {
+            $total_amount += $request->amount[$i];
+        }
+        //dd($request->all());
+        for ($i = 0; $i < $row_count; $i++) {
+            $debit = NULL;
+            $credit = NULL;
+            $debit_or_credit = $request->debit_or_credit[$i];
+            if($debit_or_credit == 'debit'){
+                $debit = $request->amount[$i];
+            }
+            if($debit_or_credit == 'credit'){
+                $credit = $request->amount[$i];
+>>>>>>> 0888e3bcadbe4c011832e83d337ecc5c3db857f2
             }
             //dd($row_count);
             for ($i = 0; $i < $row_count; $i++) {
@@ -172,7 +195,41 @@ class TransactionController extends Controller
                 //dd($transactions);
                 $transactions->update();
 
+            if(!empty($transaction_id)){
+                $transactions = Transaction::find($transaction_id);
+                $transactions->voucher_type_id = $request->voucher_type_id;
+                $transactions->voucher_no = $request->voucher_no ;
+                $transactions->date = $request->date;
+                $transactions->account_id = $account_id;
+                $transactions->account_name = $accounts->HeadName;
+                $transactions->parent_account_name = $accounts->PHeadName;
+                $transactions->account_no = $accounts->HeadCode;
+                $transactions->account_type = $accounts->HeadType;
+                $transactions->debit = $debit;
+                $transactions->credit = $credit;
+                $transactions->transaction_description = $request->transaction_description;
+                // dd($transactions);
+                $transactions->save();
+                $created_at = $transactions->created_at;
+            }else{
+                $transactions = new Transaction();
+                $transactions->voucher_type_id = $request->voucher_type_id;
+                $transactions->voucher_no = $request->voucher_no ;
+                $transactions->date = $request->date;
+                $transactions->account_id = $account_id;
+                $transactions->account_name = $accounts->HeadName;
+                $transactions->parent_account_name = $accounts->PHeadName;
+                $transactions->account_no = $accounts->HeadCode;
+                $transactions->account_type = $accounts->HeadType;
+                $transactions->debit = $debit;
+                $transactions->credit = $credit;
+                $transactions->transaction_description = $request->transaction_description;
+                $transactions->created_at = $created_at;
+//                 dd($transactions);
+                $transactions->save();
+            }
 
+<<<<<<< HEAD
             }
 //        for ($i = 0; $i < $row_count; $i++) {
 //            $debit = NULL;
@@ -205,6 +262,11 @@ class TransactionController extends Controller
 //            $transactions->save();
 //
 //        }
+=======
+
+
+        }
+>>>>>>> 0888e3bcadbe4c011832e83d337ecc5c3db857f2
         Toastr::success('Posting Created Successfully', 'Success');
         return redirect()->route('transaction.index');
     }
