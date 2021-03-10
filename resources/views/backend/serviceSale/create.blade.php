@@ -166,37 +166,18 @@
             });
             $('#store_total_amount').val(t);
             $('#total_amount').val(t);
+            $('#due_amount').val(t);
         }
 
         // onkeyup
         function discountAmount(){
             var discount_type = $('#discount_type').val();
 
-            //var total = $('#total_amount').val();
-            //console.log('total= ' + total);
-            //console.log('total= ' + typeof total);
-            //total = parseInt(total);
-            //console.log('total= ' + typeof total);
-
             var store_total_amount = $('#store_total_amount').val();
             console.log('store_total_amount= ' + store_total_amount);
             console.log('store_total_amount= ' + typeof store_total_amount);
             store_total_amount = parseInt(store_total_amount);
             console.log('total= ' + typeof store_total_amount);
-
-            // var discount_amount = $('#discount_amount').val();
-            // console.log('discount_amount= ' + discount_amount);
-            // console.log('discount_amount= ' + typeof discount_amount);
-            // discount_amount = parseInt(discount_amount);
-            // console.log('discount_amount= ' + typeof discount_amount);
-            //
-            // if(discount_type == 'flat'){
-            //     var final_amount = store_total_amount - discount_amount;
-            // }
-            // else{
-            //     var per = (store_total_amount*discount_amount)/100;
-            //     var final_amount = store_total_amount - per;
-            // }
             console.log('final_amount= ' + final_amount);
             console.log('final_amount= ' + typeof final_amount);
 
@@ -273,6 +254,7 @@
                 var total = ((qty * price)+vat);
 
                 tr.find('.amount').val(total);
+                totalAmount();
                 totalAmount();
             });
 

@@ -169,7 +169,7 @@
                             <td>&nbsp;</td>
                             <td>{{ $sum_credit > $sum_debit ? number_format($PreBalance,2,'.',',') : '' }}</td>
                             <td>{{ $sum_debit > $sum_credit ? number_format($PreBalance,2,'.',',') : '' }}</td>
-                            <td>&nbsp;</td>
+{{--                            <td>&nbsp;</td>--}}
                         </tr>
                     @endif
                     <tr>

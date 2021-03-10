@@ -23,7 +23,7 @@ class CustomerController extends Controller
 
     public function index()
     {
-        $custmers = Customer::where('status',0)->where('delete_status',0)->latest()->get();
+        $custmers = Customer::where('delete_status',0)->latest()->get();
         return view('backend.customer.index',compact('custmers'));
     }
 

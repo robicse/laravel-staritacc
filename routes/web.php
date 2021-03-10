@@ -71,16 +71,19 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('employee-salary','EmployeeSalaryController');
 
 
-    Route::resource('voucherType','VoucherTypeController');
-    Route::resource('transaction','TransactionController');
+
 
     Route::post('pay-due','ServiceSaleController@payDue')->name('pay.due');
+
+
 
     Route::get('account/coa_print','AccountController@coa_print')->name('account.coa_print');
     Route::get('account/cashbook','AccountController@cash_book_form');
     Route::post('account/cashbook','AccountController@cash_book_form')->name('account.cashbook');
     Route::get('account/cashbook-print/{date_from}/{date_to}','AccountController@cash_book_print');
 
+    Route::resource('voucherType','VoucherTypeController');
+    Route::resource('transaction','TransactionController');
     //Route::get('account/voucher-invoice/{voucher_no}/{transaction_date}','TransactionController@voucher_invoice');
     Route::get('account/voucher-invoice/{voucher_type_id}/{voucher_no}','TransactionController@voucher_invoice');
     Route::post('account/transaction-delete/{voucher_type_id}/{voucher_no}','TransactionController@transactionDelete');
