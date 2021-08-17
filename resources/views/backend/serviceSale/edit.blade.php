@@ -77,7 +77,7 @@
                                 <td width="5%" class="no">1</td>
                                 <td>
                                     <input type="hidden" name="service_sale_detail_id[]" id="service_sale_id" value="{{$serviceSalesDetail->id}}" class="form-control" >
-                                    <select class="form-control service_id select2" name="service_id[]"  required>
+                                    <select class="form-control service_id select2" name="service_id[]" onchange="getval(1,this);" required>
                                         <option value="">Select  Product</option>
                                         @foreach($services as $service)
                                             <option value="{{$service->id}}" {{$service->id == $serviceSalesDetail->service_id ? 'selected' : ''}}>{{$service->name}}</option>
@@ -86,7 +86,7 @@
                                 </td>
                                 <td width="15%" >
                                     <div id="service_sub_category_id_1">
-                                        <select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" onchange="getval(1,this);" readonly>
+                                        <select class="form-control service_sub_category_id select2" name="service_sub_category_id[]" readonly>
                                             <option value="">Select  Sub Category</option>
                                             @foreach($serviceSubCategories as $serviceSubCategory)
                                                 <option value="{{$serviceSubCategory->id}}" {{$serviceSubCategory->id == $serviceSalesDetail->service_sub_category_id ? 'selected' : ''}}>{{$serviceSubCategory->name}}</option>
