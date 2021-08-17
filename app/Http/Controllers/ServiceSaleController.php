@@ -45,7 +45,7 @@ class ServiceSaleController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
+       // dd($request->all());
         $this->validate($request, [
             'customer_id'=> 'required',
         ]);
@@ -74,6 +74,7 @@ class ServiceSaleController extends Controller
                 $serviceSaleDetails->service_sale_id = $insert_id;
                 $serviceSaleDetails->service_unit_id = $service_unit_id;
                 $serviceSaleDetails->service_id = $request->service_id[$i];
+                $serviceSaleDetails->service_sub_category_id = $request->service_sub_category_id[$i];
                 $serviceSaleDetails->qty = $request->qty[$i];
                 $serviceSaleDetails->vat = $request->vat[$i];
                 $serviceSaleDetails->price = $request->price[$i];
@@ -160,6 +161,7 @@ class ServiceSaleController extends Controller
             $serviceSaleDetails_id = $request->service_sale_detail_id[$i];
             $serviceSaleDetails = ServiceSaleDetail::find($serviceSaleDetails_id);
             $serviceSaleDetails->service_id = $request->service_id[$i];
+            $serviceSaleDetails->service_sub_category_id = $request->service_sub_category_id[$i];
             $serviceSaleDetails->service_unit_id = $request->service_unit_id[$i];
             $serviceSaleDetails->qty = $request->qty[$i];
             $serviceSaleDetails->unit = $service_unit_id;
@@ -198,24 +200,6 @@ class ServiceSaleController extends Controller
         return redirect()->route('serviceSale.index');
     }
     public function serviceRelationData(Request $request){
-
-//        //$options = 'hello';
-//        $current_row = $request->current_row;
-//        $service_id = $request->current_service_id;
-//        $service_unit_name = DB::table('service_units')
-//            ->join('services','service_units.id','=','services.service_unit_id')
-//            ->where('services.id',$service_id)
-//            ->pluck('service_units.name')
-//            ->first();
-//
-//
-//        $option = [
-//            'current_row' => $current_row,
-//            'service_unit_name' => $service_unit_name,
-//        ];
-//
-//        return response()->json(['success'=>true,'data'=>$option]);
-
 
 
         $service_id = $request->current_service_id;
