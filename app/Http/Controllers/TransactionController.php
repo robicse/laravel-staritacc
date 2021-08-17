@@ -26,8 +26,9 @@ class TransactionController extends Controller
     {
         //$transactions = Transaction::latest()->get();
         $transactions = DB::table('transactions')
-            ->select('voucher_type_id','voucher_no','created_at')
+            ->select('voucher_type_id','voucher_no','created_at','transaction_description')
             ->groupBy('created_at')
+            ->groupBy('transaction_description')
             ->groupBy('voucher_type_id')
             ->groupBy('voucher_no')
 
@@ -111,7 +112,7 @@ class TransactionController extends Controller
     }
 
 
-    public function transactionEdit($voucher_type_id, $voucher_no)
+    public function transactionEdit( $voucher_type_id, $voucher_no)
     {
         //dd($voucher_no);
         $voucherTypes=VoucherType::all();
@@ -127,18 +128,6 @@ class TransactionController extends Controller
     {
 
         //dd($request->all());
-<<<<<<< HEAD
-            $this->validate($request, [
-                'account_id'=> 'required',
-            ]);
-
-            $row_count = count($request->transaction_id);
-            //dd($row_count);
-            $total_amount = 0;
-            for($i=0; $i<$row_count;$i++)
-            {
-                $total_amount += $request->amount[$i];
-=======
         $this->validate($request, [
             'account_id'=> 'required',
         ]);
@@ -159,41 +148,13 @@ class TransactionController extends Controller
             }
             if($debit_or_credit == 'credit'){
                 $credit = $request->amount[$i];
->>>>>>> 0888e3bcadbe4c011832e83d337ecc5c3db857f2
             }
-            //dd($row_count);
-            for ($i = 0; $i < $row_count; $i++) {
-                $debit = NULL;
-                $credit = NULL;
-                $debit_or_credit = $request->debit_or_credit[$i];
-                if($debit_or_credit == 'debit'){
-                    $debit = $request->amount[$i];
-                }
-                if($debit_or_credit == 'credit'){
-                    $credit = $request->amount[$i];
-                }
 
-                $account_id = $request->account_id[$i];
-                $accounts = Account::where('id',$account_id)->first();
-    //dd($accounts);
-               $transaction_id = $request->transaction_id[$i];
-                //dd($transaction_id);
+            $account_id = $request->account_id[$i];
+            $accounts = Account::where('id',$account_id)->first();
 
-
-                $transactions = Transaction::find($transaction_id);
-                $transactions->voucher_type_id = $request->voucher_type_id;
-                $transactions->voucher_no = $request->voucher_no ;
-                $transactions->date = $request->date;
-                $transactions->account_id = $account_id;
-                $transactions->account_name = $accounts->HeadName;
-                $transactions->parent_account_name = $accounts->PHeadName;
-                $transactions->account_no = $accounts->HeadCode;
-                $transactions->account_type = $accounts->HeadType;
-                $transactions->debit = $debit;
-                $transactions->credit = $credit;
-                $transactions->transaction_description = $request->transaction_description;
-                //dd($transactions);
-                $transactions->update();
+            $transaction_id = $request->transaction_id[$i];
+            //dd($transaction_id);
 
             if(!empty($transaction_id)){
                 $transactions = Transaction::find($transaction_id);
@@ -229,44 +190,9 @@ class TransactionController extends Controller
                 $transactions->save();
             }
 
-<<<<<<< HEAD
-            }
-//        for ($i = 0; $i < $row_count; $i++) {
-//            $debit = NULL;
-//            $credit = NULL;
-//            $debit_or_credit = $request->debit_or_credit[$i];
-//            if($debit_or_credit == 'debit'){
-//                $debit = $request->amount[$i];
-//            }
-//            if($debit_or_credit == 'credit'){
-//                $credit = $request->amount[$i];
-//            }
-//
-//            $account_id = $request->account_id[$i];
-//            $accounts = Account::where('id',$account_id)->first();
-//
-//
-//            $transactions = new Transaction();
-//            $transactions->voucher_type_id = $request->voucher_type_id;
-//            $transactions->voucher_no = $request->voucher_no ;
-//            $transactions->date = $request->date;
-//            $transactions->account_id = $account_id;
-//            $transactions->account_name = $accounts->HeadName;
-//            $transactions->parent_account_name = $accounts->PHeadName;
-//            $transactions->account_no = $accounts->HeadCode;
-//            $transactions->account_type = $accounts->HeadType;
-//            $transactions->debit = $debit;
-//            $transactions->credit = $credit;
-//            $transactions->transaction_description = $request->transaction_description;
-//           // dd($transactions);
-//            $transactions->save();
-//
-//        }
-=======
 
 
         }
->>>>>>> 0888e3bcadbe4c011832e83d337ecc5c3db857f2
         Toastr::success('Posting Created Successfully', 'Success');
         return redirect()->route('transaction.index');
     }
@@ -290,8 +216,8 @@ class TransactionController extends Controller
     public function general_ledger_form()
     {
 
-       // $account_id = $request->account_id[$i];
-       // $accounts = Account::where('id',$account_id)->first();
+        // $account_id = $request->account_id[$i];
+        // $accounts = Account::where('id',$account_id)->first();
         //$general_ledger_account_nos = DB::table('transactions')->where('account_id', '$accounts')->Orderby('account_no', 'asc')->get();
         //$general_ledger_account_nos =Transaction::Orderby('account_no', 'asc')->get();
         $general_ledger_account_nos = DB::table('accounts')->where('IsGL', '1')->Orderby('HeadName', 'asc')->get();
@@ -364,12 +290,10 @@ class TransactionController extends Controller
 
         return view('backend.account.general_ledger_view', compact('general_ledger_infos','PreBalance', 'preDebCre', 'general_ledger', 'date_from', 'date_to'));
     }
-
-
     public function general_ledger_print($transaction_head,$date_from,$date_to)
     {
-        //echo ($transaction_head->account_no);
-        //exit;
+//echo ($transaction_head->account_no);
+//exit;
         if( (!empty($transaction_head)) && (!empty($date_from)) && (!empty($date_to)) )
         {
             $gl_prevalance_data = DB::table('transactions')
@@ -791,7 +715,7 @@ class TransactionController extends Controller
             ->latest()
             ->pluck('voucher_no')
             ->first();
-       // dd($current_voucher_no);
+        // dd($current_voucher_no);
         if(!empty($current_voucher_no)){
             $voucher_no = $current_voucher_no + 1;
         }else{
