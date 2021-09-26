@@ -55,7 +55,7 @@ class TransactionController extends Controller
         $this->validate($request, [
             'account_id'=> 'required',
         ]);
-
+        $date_time = date('Y-m-d H:i:s');
         $check_voucher_no_exists = Transaction::where('voucher_no',$request->voucher_no)->where('voucher_type_id',$request->voucher_type_id)->latest()->pluck('voucher_no')->first();
         //dd($check_voucher_no_exists);
         if($check_voucher_no_exists){
@@ -97,6 +97,8 @@ class TransactionController extends Controller
             $transactions->debit = $debit;
             $transactions->credit = $credit;
             $transactions->transaction_description = $request->transaction_description;
+            $transactions->created_at = $date_time;
+
             //dd($transactions);
             $transactions->save();
 
