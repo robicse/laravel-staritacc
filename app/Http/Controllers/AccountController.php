@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Account;
 use App\Transaction;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -206,6 +207,70 @@ class AccountController extends Controller
     }
 
     public function insert_coa(Request $request){
+
+        $isact =$request->post('IsActive');
+        $IsActive = (!empty($isact)?$isact:0);
+        $trns =$request->post('IsTransaction');
+        $IsTransaction = (!empty($trns)?$trns:0);
+        $isgl=$request->post('IsGL');
+        $IsGL = (!empty($isgl)?$isgl:0);
+        $createby=Auth::User()->id;
+        $createdate=date('Y-m-d H:i:s');
+
+        $new = $request->btnSave;
+        if(!empty($new)){
+            $checkExists = Account::where('HeadName',$request->post('txtHeadName'))->where('PHeadName',$request->post('txtPHead'))->first();
+            if(!empty($checkExists)){
+                Toastr::warning('Accounts Already Exists, Please Try Another.', 'Warning');
+                return back();
+            }
+
+            $account = new Account;
+            $account->HeadCode = $request->post('txtHeadCode');
+            $account->HeadName = $request->post('txtHeadName');
+            $account->PHeadName = $request->post('txtPHead');
+            $account->HeadLevel = $request->post('txtHeadLevel');
+            $account->IsActive = $IsActive;
+            $account->IsTransaction = $IsTransaction;
+            $account->IsGL = $IsGL;
+            $account->HeadType = $request->post('txtHeadType');
+            $account->CreateBy = $createby;
+            $account->UpdateBy = $createby;
+            $account->save();
+        }else{
+            $checkExists = Account::where('HeadName',$request->post('txtHeadName'))
+                ->where('PHeadName',$request->post('txtPHead'))
+                ->where('HeadCode','!=',$request->post('txtHeadCode'))
+                ->first();
+            if(!empty($checkExists)){
+                Toastr::warning('Accounts Already Exists, Please Try Another.', 'Warning');
+                return back();
+            }
+
+            $upinfo = Account::where('HeadName',$request->post('HeadName'))->first();
+            //dd($upinfo);
+            $upinfo->HeadName = $request->post('txtHeadName');
+            $upinfo->IsGL = $request->post('IsGL') ? $request->post('IsGL') : 0;
+            $upinfo->IsTransaction = $request->post('IsTransaction') ? $request->post('IsTransaction') : 0;
+            $upinfo->bankUserAccount = $request->post('bankUserAccount') ? $request->post('bankUserAccount') : '';
+
+            // first parent headname update
+            $pHeadNameUpdateInfos = Account::where('PHeadName',$request->post('HeadName'))->get();
+            if(count($pHeadNameUpdateInfos) > 0){
+                foreach($pHeadNameUpdateInfos as $pHeadNameUpdateInfo){
+                    $pHeadNameUpdate = Account::find($pHeadNameUpdateInfo->id);
+                    $pHeadNameUpdate->PHeadName=$request->post('txtHeadName');
+                    $pHeadNameUpdate->save();
+                }
+            }
+
+            $upinfo->update();
+        }
+        Toastr::success('Accounts Inserted Successfully', 'Success');
+        return back();
+    }
+
+    public function insert_coa_backup(Request $request){
         //echo 'okk';exit;
         //dd($request->all());
         /*if(!empty(Auth::User()->getRoleNames())){
@@ -305,6 +370,17 @@ class AccountController extends Controller
             $upinfo->IsGL = $request->post('IsGL') ? $request->post('IsGL') : 0;
             $upinfo->IsTransaction = $request->post('IsTransaction') ? $request->post('IsTransaction') : 0;
             $upinfo->bankUserAccount = $request->post('bankUserAccount') ? $request->post('bankUserAccount') : '';
+
+            // first parent headname update
+            $pHeadNameUpdateInfos = Account::where('PHeadName',$request->post('HeadName'))->get();
+            if(count($pHeadNameUpdateInfos) > 0){
+                foreach($pHeadNameUpdateInfos as $pHeadNameUpdateInfo){
+                    $pHeadNameUpdate = Account::find($pHeadNameUpdateInfo->id);
+                    $pHeadNameUpdate->PHeadName=$request->post('txtHeadName');
+                    $pHeadNameUpdate->save();
+                }
+            }
+
 
             $upinfo->update();
         }
