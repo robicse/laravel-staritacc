@@ -238,6 +238,15 @@ class AccountController extends Controller
             $account->UpdateBy = $createby;
             $account->save();
         }else{
+            $checkExists = Account::where('HeadName',$request->post('txtHeadName'))
+                ->where('PHeadName',$request->post('txtPHead'))
+                ->where('HeadCode','!=',$request->post('txtHeadCode'))
+                ->first();
+            if(!empty($checkExists)){
+                Toastr::warning('Accounts Already Exists, Please Try Another.', 'Warning');
+                return back();
+            }
+
             $upinfo = Account::where('HeadName',$request->post('HeadName'))->first();
             //dd($upinfo);
             $upinfo->HeadName = $request->post('txtHeadName');
