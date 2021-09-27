@@ -21,6 +21,7 @@
                         <th>Date</th>
                         <th>Voucher Type</th>
                         <th>Voucher No</th>
+                        <th width="40%">Description</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -43,7 +44,9 @@
                         </td>
                         <td> @php
                                 echo \App\VoucherType::where('id',$transaction->voucher_type_id)->pluck('name')->first();
-                            @endphp -{{ $current_transactions->voucher_no}}</td>
+                            @endphp -{{ $current_transactions->voucher_no}}
+                        </td>
+                        <td> {{ $transaction->transaction_description}} </td>
                         <td>
                             <a href="{{ url('account/voucher-invoice/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px">print</a>
                             <a href="{{ url('account/transaction-edit/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
