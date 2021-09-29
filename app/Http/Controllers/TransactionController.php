@@ -26,11 +26,14 @@ class TransactionController extends Controller
     {
         //$transactions = Transaction::latest()->get();
         $transactions = DB::table('transactions')
-            ->select('voucher_type_id','voucher_no','created_at','transaction_description')
+            ->select('id','authorized','approved','voucher_type_id','voucher_no','created_at','transaction_description')
+            ->groupBy('id')
             ->groupBy('created_at')
             ->groupBy('transaction_description')
             ->groupBy('voucher_type_id')
             ->groupBy('voucher_no')
+            ->groupBy('authorized')
+            ->groupBy('approved')
 
             ->latest()
             ->get();
@@ -38,7 +41,17 @@ class TransactionController extends Controller
         return view('backend.posting.index',compact('transactions'));
     }
 
+    public function updateAthorized(Request $request)
+    {
 
+        $transactions = Transaction::findOrFail($request->id);
+        $transactions->authorized = $request->status;
+        //dd($transactions);
+        if($transactions->save()){
+            return 1;
+        }
+        return 0;
+    }
     public function create(Request $request)
     {
         $voucherTypes=VoucherType::all();
@@ -226,6 +239,14 @@ class TransactionController extends Controller
         //dd($accounts);
 
         return view('backend.account.general_ledger_form', compact('general_ledger_account_nos'));
+    }
+    public function bank_book_general_ledger()
+    {
+
+        $general_ledger_account_nos = DB::table('accounts')->where('IsGL', '1')->where('HeadName','Cash at Bank')->Orderby('HeadName', 'asc')->get();
+        //dd($general_ledger_account_nos);
+
+        return view('backend.account.bankbook_general_ledger', compact('general_ledger_account_nos'));
     }
     public function view_general_ledger(Request $request)
     {

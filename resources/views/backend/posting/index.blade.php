@@ -1,5 +1,65 @@
 @extends('backend._partial.dashboard')
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
 
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+</style>
 @section('content')
     <main class="app-content">
         <div class="app-title">
@@ -21,7 +81,9 @@
                         <th>Date</th>
                         <th>Voucher Type</th>
                         <th>Voucher No</th>
-                        <th width="40%">Description</th>
+                        <th width="20%">Description</th>
+                        <th>Authorized</th>
+                        <th>Approved</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -48,6 +110,15 @@
                         </td>
                         <td> {{ $transaction->transaction_description}} </td>
                         <td>
+                            <div class="form-group col-md-2">
+                                <label class="switch" style="margin-top:40px;">
+                                    <input onchange="update_authorized(this)" value="{{ $transaction->id }}" {{$transaction->authorized == 1? 'checked':''}} type="checkbox" >
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td> {{ $transaction->approved}} </td>
+                        <td>
                             <a href="{{ url('account/voucher-invoice/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px">view</a>
                             <a href="{{ url('account/transaction-edit/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
                             <form method="post" action="{{ url('account/transaction-delete/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}">
@@ -69,4 +140,26 @@
     </main>
 @endsection
 
+@push('js')
+    <script>
+        function update_authorized(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+
+            $.post('{{ route('update_authorized') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+
+                    toastr.success('success', 'Is Nav updated successfully');
+                }
+                else{
+                    toastr.danger('danger', 'Something went wrong');
+                }
+            });
+        }
+    </script>
+@endpush
 

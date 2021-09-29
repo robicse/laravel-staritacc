@@ -84,12 +84,19 @@ Route::group(['middleware' => ['auth']], function() {
 
     Route::resource('voucherType','VoucherTypeController');
     Route::resource('transaction','TransactionController');
+
+    Route::post('account/authorized','TransactionController@updateAthorized')->name('update_authorized');
+
+
     //Route::get('account/voucher-invoice/{voucher_no}/{transaction_date}','TransactionController@voucher_invoice');
     Route::get('account/voucher-invoice/{voucher_type_id}/{voucher_no}','TransactionController@voucher_invoice');
     Route::post('account/transaction-delete/{voucher_type_id}/{voucher_no}','TransactionController@transactionDelete');
     Route::get('account/transaction-edit/{voucher_type_id}/{voucher_no}','TransactionController@transactionEdit');
     Route::post('account/transaction-update/{voucher_type_id}/{voucher_no}','TransactionController@transactionUpdate');
     Route::get('account/generalledger','TransactionController@general_ledger_form')->name('account.generalledger');
+
+    Route::get('account/bankbook/generalledger','TransactionController@bank_book_general_ledger')->name('account.bankbook.generalledger');
+
     Route::get('/get-transaction-head/{id}','AccountController@transaction_head');
     Route::post('account/general-ledger','TransactionController@view_general_ledger')->name('account.general_ledger');
     Route::get('account/general-ledger-print/{headcode}/{date_from}/{date_to}','TransactionController@general_ledger_print');
