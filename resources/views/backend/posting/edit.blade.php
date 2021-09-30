@@ -4,6 +4,66 @@
         font-size: 20px;
         color: red;
     }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
 </style>
 
 @section('content')
@@ -49,6 +109,20 @@
                                         <div class="col-md-4">
                                             <label class="control-label text-right">Date  <small class="requiredCustom">*</small></label>
                                             <input type="text" name="date" class="datepicker form-control" value="{{$transactions[0]->date}}">
+                                        </div>
+                                        <div class="col-md-4" style="margin-top: 20px">
+                                            <label class="control-label">Authorized</label>
+                                            <label class="switch">
+                                                <input onchange="update_authorized(this)" value="{{ $transactions[0]->id }}" {{$transactions[0]->authorized == 1? 'checked':''}} type="checkbox" >
+                                                <span class="slider round"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-4" style="margin-top: 20px">
+                                            <label class="control-label">Approved</label>
+                                            <label class="switch">
+                                                <input onchange="update_approved(this)" value="{{ $transactions[0]->id }}" {{$transactions[0]->approved == 1? 'checked':''}} type="checkbox" >
+                                                <span class="slider round"></span>
+                                            </label>
                                         </div>
                                     </div>
                                 </th>
@@ -119,7 +193,44 @@
 @endsection
 
 @push('js')
+
     <script>
+        function update_authorized(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+
+            $.post('{{ route('update_authorized') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+
+                    toastr.success('success', 'Authorization updated successfully');
+                }
+                else{
+                    toastr.error('danger', 'Something went wrong');
+                }
+            });
+        }
+        function update_approved(el){
+            if(el.checked){
+                var status = 1;
+            }
+            else{
+                var status = 0;
+            }
+
+            $.post('{{ route('update_approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+                if(data == 1){
+
+                    toastr.success('success', 'Approval updated successfully');
+                }
+                else{
+                    toastr.error('danger', 'Something went wrong');
+                }
+            });
+        }
 
         function totalAmount(){
             var t = 0;

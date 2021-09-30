@@ -20,14 +20,15 @@ class TransactionController extends Controller
         $this->middleware('permission:general-ledger-list', ['only' => ['general_ledger_form','view_general_ledger']]);
         $this->middleware('permission:trial-balance-list', ['only' => ['trial_balance_form','view_trial_balance']]);
         $this->middleware('permission:balance-sheet-list', ['only' => ['balance_sheet']]);
+        $this->middleware('permission:update-authorized-status', ['only' => ['updateAthorized']]);
+        $this->middleware('permission:update-approved-status', ['only' => ['updateApproved']]);
     }
 
     public function index()
     {
         //$transactions = Transaction::latest()->get();
         $transactions = DB::table('transactions')
-            ->select('id','authorized','approved','voucher_type_id','voucher_no','created_at','transaction_description')
-            ->groupBy('id')
+            ->select('authorized','approved','voucher_type_id','voucher_no','created_at','transaction_description')
             ->groupBy('created_at')
             ->groupBy('transaction_description')
             ->groupBy('voucher_type_id')
@@ -46,6 +47,17 @@ class TransactionController extends Controller
 
         $transactions = Transaction::findOrFail($request->id);
         $transactions->authorized = $request->status;
+        //dd($transactions);
+        if($transactions->save()){
+            return 1;
+        }
+        return 0;
+    }
+    public function updateApproved(Request $request)
+    {
+
+        $transactions = Transaction::findOrFail($request->id);
+        $transactions->approved = $request->status;
         //dd($transactions);
         if($transactions->save()){
             return 1;

@@ -86,6 +86,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('transaction','TransactionController');
 
     Route::post('account/authorized','TransactionController@updateAthorized')->name('update_authorized');
+    Route::post('account/approved','TransactionController@updateApproved')->name('update_approved');
 
 
     //Route::get('account/voucher-invoice/{voucher_no}/{transaction_date}','TransactionController@voucher_invoice');
