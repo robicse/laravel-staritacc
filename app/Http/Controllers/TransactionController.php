@@ -42,7 +42,7 @@ class TransactionController extends Controller
         return view('backend.posting.index',compact('transactions'));
     }
 
-    public function updateAthorized(Request $request)
+    public function updateAthorized2(Request $request)
     {
 
         $transactions = Transaction::findOrFail($request->id);
@@ -53,16 +53,39 @@ class TransactionController extends Controller
         }
         return 0;
     }
+
+    public function updateAthorized(Request $request)
+    {
+        $transactions= Transaction::where('voucher_type_id',$request->voucher_type_id)->where('voucher_no',$request->voucher_no)->get();
+        if($count = count($transactions) > 0){
+            foreach($transactions as $transaction){
+                $transactions = Transaction::findOrFail($transaction->id);
+                $transactions->authorized = $request->status;
+                $transactions->save();
+            }
+        }if($transactions->save()){
+        return 1;
+    }else{
+            return 0;
+        }
+
+    }
     public function updateApproved(Request $request)
     {
 
-        $transactions = Transaction::findOrFail($request->id);
-        $transactions->approved = $request->status;
-        //dd($transactions);
-        if($transactions->save()){
-            return 1;
-        }
+        $transactions= Transaction::where('voucher_type_id',$request->voucher_type_id)->where('voucher_no',$request->voucher_no)->get();
+        if($count = count($transactions) > 0){
+            foreach($transactions as $transaction){
+                $transactions = Transaction::findOrFail($transaction->id);
+                $transactions->approved = $request->status;
+                $transactions->save();
+            }
+        }if($transactions->save()){
+        return 1;
+    }else{
         return 0;
+    }
+
     }
     public function create(Request $request)
     {
@@ -146,7 +169,7 @@ class TransactionController extends Controller
         $accounts = Account::all();
         //$transactions = Transaction::find($id);;
         $transactions= Transaction::where('voucher_type_id',$voucher_type_id)->where('voucher_no',$voucher_no)->get();
-        //dd($transactions);
+        //dd($transactions[0]);
         return view('backend.posting.edit',compact('voucherTypes','accounts','transactions'));
     }
 

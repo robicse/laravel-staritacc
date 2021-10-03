@@ -110,25 +110,11 @@
                                             <label class="control-label text-right">Date  <small class="requiredCustom">*</small></label>
                                             <input type="text" name="date" class="datepicker form-control" value="{{$transactions[0]->date}}">
                                         </div>
-                                        <div class="col-md-4" style="margin-top: 20px">
-                                            <label class="control-label">Authorized</label>
-                                            <label class="switch">
-                                                <input onchange="update_authorized(this)" value="{{ $transactions[0]->id }}" {{$transactions[0]->authorized == 1? 'checked':''}} type="checkbox" >
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
-                                        <div class="col-md-4" style="margin-top: 20px">
-                                            <label class="control-label">Approved</label>
-                                            <label class="switch">
-                                                <input onchange="update_approved(this)" value="{{ $transactions[0]->id }}" {{$transactions[0]->approved == 1? 'checked':''}} type="checkbox" >
-                                                <span class="slider round"></span>
-                                            </label>
-                                        </div>
                                     </div>
                                 </th>
                             </tr>
                         </table>
-                        <input type="button" class="btn btn-primary add " style="margin-left: 804px;" value="Add More Product">
+{{--                        <input type="button" class="btn btn-primary add " style="margin-left: 804px;" value="Add More Product">--}}
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -146,7 +132,7 @@
                             <tr>
                                 <td width="5%" class="no">{{$key+1}}</td>
                                 <td>
-                                    <input type="text" class="form-control" name="transaction_id[]" id="transaction_id_1" value="{{$transaction->id}}">
+                                    <input type="hidden" class="form-control" name="transaction_id[]" id="transaction_id_1" value="{{$transaction->id}}">
                                     <select class="form-control account_id select2" name="account_id[]" id="account_id_1" required>
                                         <option value="">Select Account Name</option>
                                         @foreach($accounts as $account)
@@ -195,42 +181,6 @@
 @push('js')
 
     <script>
-        function update_authorized(el){
-            if(el.checked){
-                var status = 1;
-            }
-            else{
-                var status = 0;
-            }
-
-            $.post('{{ route('update_authorized') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
-                if(data == 1){
-
-                    toastr.success('success', 'Authorization updated successfully');
-                }
-                else{
-                    toastr.error('danger', 'Something went wrong');
-                }
-            });
-        }
-        function update_approved(el){
-            if(el.checked){
-                var status = 1;
-            }
-            else{
-                var status = 0;
-            }
-
-            $.post('{{ route('update_approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
-                if(data == 1){
-
-                    toastr.success('success', 'Approval updated successfully');
-                }
-                else{
-                    toastr.error('danger', 'Something went wrong');
-                }
-            });
-        }
 
         function totalAmount(){
             var t = 0;

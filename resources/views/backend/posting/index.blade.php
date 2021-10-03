@@ -82,6 +82,8 @@
                         <th width="10%">Voucher Type</th>
                         <th width="10%">Voucher No</th>
                         <th width="45%">Description</th>
+                        <th width="45%">Authorized</th>
+                        <th width="45%">Approved</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -96,36 +98,41 @@
 //dd($current_transactions)
                         @endphp
                     <tr>
-                        <td>{{ $key+1 }}</td>
-                        <td>{{ $current_transactions->date}}</td>
                         <td>
-                            @php
-                                echo \App\VoucherType::where('id',$transaction->voucher_type_id)->pluck('name')->first();
-                            @endphp
+
+                                {{ $key+1 }}
+                            </td>
+                            <td>{{ $current_transactions->date}}</td>
+                            <td>
+                                @php
+                                    echo \App\VoucherType::where('id',$transaction->voucher_type_id)->pluck('name')->first();
+                        @endphp
                         </td>
                         <td> @php
                                 echo \App\VoucherType::where('id',$transaction->voucher_type_id)->pluck('name')->first();
                             @endphp -{{ $current_transactions->voucher_no}}
                         </td>
                         <td> {{ $transaction->transaction_description}} </td>
-{{--                        <td>--}}
-{{--                            <div class="form-group col-md-2">--}}
-{{--                                <label class="switch" style="margin-top:40px;">--}}
-{{--                                    <input onchange="update_authorized(this)" value="{{ $current_transactions->id }}" {{$current_transactions->authorized == 1? 'checked':''}} type="checkbox" >--}}
-{{--                                    <span class="slider round"></span>--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                        </td>--}}
-{{--                        <td>--}}
-{{--                            <div class="form-group col-md-2">--}}
-{{--                                <label class="switch" style="margin-top:40px;">--}}
-{{--                                    <input onchange="update_approved(this)" value="{{ $current_transactions->id }}" {{$current_transactions->approved == 1? 'checked':''}} type="checkbox" >--}}
-{{--                                    <span class="slider round"></span>--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                        </td>--}}
+                        <td>
+                            <div class="form-group col-md-2">
+                                <label class="switch" style="margin-top:40px;">
+                                    <input onchange="update_authorized(this,{{$transaction->voucher_type_id}})" value="{{ $transaction->voucher_no }}" {{$transaction->authorized == 1? 'checked':''}} type="checkbox" >
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group col-md-2">
+                                <label class="switch" style="margin-top:40px;">
+                                    <input onchange="update_approved(this,{{$transaction->voucher_type_id}})" value="{{ $transaction->voucher_no }}" {{$transaction->approved == 1? 'checked':''}} type="checkbox" >
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </td>
 
                         <td>
+
+
                             <a href="{{ url('account/voucher-invoice/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px">view</a>
                             <a href="{{ url('account/transaction-edit/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}" class="btn btn-sm btn-primary float-left" style="margin-left: 5px"><i class="fa fa-edit"></i></a>
                             <form method="post" action="{{ url('account/transaction-delete/'.$transaction->voucher_type_id.'/'.$transaction->voucher_no) }}">
@@ -149,7 +156,8 @@
 
 @push('js')
     <script>
-        function update_authorized(el){
+        function update_authorized(el,voucher_type_id){
+            //alert(voucher_type_id);
             if(el.checked){
                 var status = 1;
             }
@@ -157,7 +165,7 @@
                 var status = 0;
             }
 
-            $.post('{{ route('update_authorized') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+            $.post('{{ route('update_authorized') }}', {_token:'{{ csrf_token() }}', voucher_no:el.value, voucher_type_id:voucher_type_id, status:status}, function(data){
                 if(data == 1){
 
                     toastr.success('success', 'Authorization updated successfully');
@@ -167,7 +175,7 @@
                 }
             });
         }
-        function update_approved(el){
+        function update_approved(el,voucher_type_id){
             if(el.checked){
                 var status = 1;
             }
@@ -175,7 +183,7 @@
                 var status = 0;
             }
 
-            $.post('{{ route('update_approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
+            $.post('{{ route('update_approved') }}', {_token:'{{ csrf_token() }}', voucher_no:el.value, voucher_type_id:voucher_type_id, status:status}, function(data){
                 if(data == 1){
 
                     toastr.success('success', 'Approval updated successfully');

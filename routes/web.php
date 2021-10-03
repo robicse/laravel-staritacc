@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('voucherType','VoucherTypeController');
     Route::resource('transaction','TransactionController');
 
+    Route::post('account/authorized2','TransactionController@updateAthorized2')->name('update_authorized2');
     Route::post('account/authorized','TransactionController@updateAthorized')->name('update_authorized');
     Route::post('account/approved','TransactionController@updateApproved')->name('update_approved');
 

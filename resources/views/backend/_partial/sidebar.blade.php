@@ -3,6 +3,7 @@
         <img class="app-sidebar__user-avatar" src="{!! asset('backend/user.png') !!}" alt="User Image" width="60px">
         <div>
 {{--            <p class="app-sidebar__user-name">{{ Auth::user()->roles->name }}</p>--}}
+
             <p class="app-sidebar__user-designation">{{Auth::User()->getRoleNames()[0]}},<br/>{{ Auth::User()->name }}</p>
         </div>
     </div>

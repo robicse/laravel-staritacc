@@ -13,6 +13,11 @@
 
         </div>
         <div class="row">
+{{--            @php--}}
+{{--                echo '<pre>';--}}
+{{--                echo print_r( Auth::User()->getRoleNames());--}}
+{{--                echo '</pre>';--}}
+{{--            @endphp--}}
             <div class="col-md-6 col-lg-4">
                 <div class="widget-small danger coloured-icon" ><i class="icon fas fa-money-check-alt "></i>
                     <div class="info">
