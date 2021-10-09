@@ -114,7 +114,7 @@
                                 </th>
                             </tr>
                         </table>
-{{--                        <input type="button" class="btn btn-primary add " style="margin-left: 804px;" value="Add More Product">--}}
+                        <input type="button" class="btn btn-primary add " style="margin-left: 804px;" value="Add More Product">
                         <table class="table table-striped">
                             <thead>
                             <tr>
