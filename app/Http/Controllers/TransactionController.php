@@ -113,9 +113,24 @@ class TransactionController extends Controller
 
         $row_count = count($request->account_id);
         $total_amount = 0;
+        $total_debit = NULL;
+        $total_credit = NULL;
         for($i=0; $i<$row_count;$i++)
         {
             $total_amount += $request->amount[$i];
+
+            $debit_or_credit = $request->debit_or_credit[$i];
+            if($debit_or_credit == 'debit'){
+                $total_debit += $request->amount[$i];
+            }
+            if($debit_or_credit == 'credit'){
+                $total_credit += $request->amount[$i];
+            }
+        }
+
+        if($total_debit !== $total_credit){
+            Toastr::warning('Debit sum and credit sum must be equal, Please try again!', 'Warning');
+            return redirect()->route('transaction.create');
         }
 
         for ($i = 0; $i < $row_count; $i++) {
@@ -184,10 +199,26 @@ class TransactionController extends Controller
 
         $row_count = count($request->account_id);
         $total_amount = 0;
+        $total_debit = NULL;
+        $total_credit = NULL;
         for($i=0; $i<$row_count;$i++)
         {
             $total_amount += $request->amount[$i];
+
+            $debit_or_credit = $request->debit_or_credit[$i];
+            if($debit_or_credit == 'debit'){
+                $total_debit += $request->amount[$i];
+            }
+            if($debit_or_credit == 'credit'){
+                $total_credit += $request->amount[$i];
+            }
         }
+
+        if($total_debit !== $total_credit){
+            Toastr::warning('Debit sum and credit sum must be equal, Please try again!', 'Warning');
+            return redirect()->route('transaction.index');
+        }
+
         //dd($request->all());
         for ($i = 0; $i < $row_count; $i++) {
             $debit = NULL;
