@@ -85,23 +85,26 @@
 
                 <div class="tile">
                     <div class="col-md-8" style="text-align: center; margin-left: 100px">
-                        <h2>StarIT LTD</h2>
+                        <h2>Max Enterprise</h2>
+                        <p style="margin: 0px">Corporate Housekeeping & Facility Management Service Provider</p>
                         <p style="margin: 0px">
-                            BBTOA Building,4th Floor,Road no:9 ,South Kallyanpur, Mirpur,Dhaka-1207
+                            Flat-2A,House-06,Block-2C,Pallabi,Mirpur,Dhaka-1216,Bangladesh
                         </p>
-                        <p style="margin: 0px"><b>Phone</b>:+88028091125 <span>, <b>Email</b>:info@123@starit.com, </span> <span><b>Web</b> :www.123starir.com</span> </p>
                         <h2 id="rcorners2">Credit Voucher</h2>
                     </div>
                     <div class="col-md-4" style="text-align: right; float: right;margin-top: -58px ">
-                        Transaction.NO :{{$transaction}}
+                        V.NO :______________
                         <br/>
                         Date : {{ $date_to }}
                     </div>
 
                     <div style="margin-top: 30px">
-                        <p>Debit A/C:{{$transaction_head}} </p>
-                        <p>Head of Account:{{$acc_name}}</p>
+                        <p>Debit A/C: ___________________________________________________________________________________________________________________________</p>
+                        <p>Paid To_______________________________________________________________________________________________________________________________</p>
                     </div>
+                    {{--                <div class="col-md-12" style="text-align: right;">--}}
+                    {{--                    Account Name : {{ \App\Account::where('HeadCode', $general_ledger)->pluck('HeadName')->first() }}--}}
+                    {{--                </div>--}}
                     <table class="table table-striped table-bordered">
                         <thead>
                         <tr>

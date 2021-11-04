@@ -5,7 +5,6 @@
         <style>
             body p {
                 font-size: 18px;
-                font-family: Tahoma;
             }
             /* Styles go here */
 
