@@ -29,6 +29,7 @@
                     To Date : {{ $date_to }}
                     <br>
                     Account Name : {{ \App\Account::where('HeadCode', $general_ledger)->pluck('HeadName')->first() }}
+                    {{$head_type == 'Head' ? '(Child)' : ''}}
                 </div>
                 <div class="table-responsive">
                     <table id="example1" class="table table-bordered table-striped">

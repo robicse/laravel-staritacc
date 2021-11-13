@@ -19,9 +19,23 @@
                     <form method="post" action="{{ route('account.general_ledger') }}">
                         @csrf
                         <div class="form-group row">
-                            <label class="control-label col-md-3 text-right">General Ledger Head</label>
+                            <label class="control-label col-md-3 text-right">General Ledger</label>
+                            <div class="col-md-8 form-check-inline">
+                                <div class="col-3">
+                                    <input type="radio" name="head_type" value="Head" id="Head" checked>
+                                    <label for="payOnline">Head Include Child</label>
+                                </div>
+
+                                <div class="col-2">
+                                    <input type="radio" name="head_type" value="Child" id="Child">
+                                    <label for="PayManually">Only Child</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="control-label col-md-3 text-right">&nbsp;</label>
                             <div class="col-md-3">
-                                <select class="form-control select2" name="general_ledger" id="general_ledger">
+                                <select class="form-control select2" name="general_ledger" id="general_ledger" />
                                     <option value="">Select One</option>
                                     @foreach($general_ledger_account_nos as $general_ledger_account_no)
                                         <option value="{{ $general_ledger_account_no->HeadCode }}">{{ $general_ledger_account_no->HeadName }}</option>

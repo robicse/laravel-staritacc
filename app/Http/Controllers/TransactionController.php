@@ -316,68 +316,131 @@ class TransactionController extends Controller
     }
     public function view_general_ledger(Request $request)
     {
+        $head_type = $request->head_type;
         $general_ledger = $request->general_ledger;
         $date_from = $request->date_from;
         $date_to = $request->date_to;
 
-        if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
-        {
-            $gl_pre_valance_data = DB::table('transactions')
-                ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
-                ->where('date', '<',$date_from)
-                ->where('account_no',$general_ledger)
-                ->groupBy('account_no')
-                ->first();
-        }else{
-            $gl_pre_valance_data = DB::table('transactions')
-                ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
-                ->where('date', '<',$date_from)
-                ->groupBy('account_no')
-                ->first();
-        }
-        //dd($gl_pre_valance_data);
+        if($head_type == 'Head'){
+            //dd($request->all());
 
-        $PreBalance=0;
-        $preDebCre = 'De/Cr';
-        if(!empty($gl_pre_valance_data))
-        {
-            //echo 'ok';exit;
-            $debit = $gl_pre_valance_data->debit;
-            $credit = $gl_pre_valance_data->credit;
-            if($debit > $credit)
+            if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
             {
-                $PreBalance = $debit - $credit;
-                $preDebCre = 'De';
+                $gl_pre_valance_data = DB::table('transactions')
+                    ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
+                    ->where('date', '<',$date_from)
+                    ->where('account_no', 'like', $general_ledger.'%')
+                    ->groupBy('account_no')
+                    ->first();
             }else{
-                $PreBalance = $credit - $debit;
-                $preDebCre = 'Cr';
+                $gl_pre_valance_data = DB::table('transactions')
+                    ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
+                    ->where('date', '<',$date_from)
+                    ->groupBy('account_no')
+                    ->first();
+            }
+            //dd($gl_pre_valance_data);
+
+            $PreBalance=0;
+            $preDebCre = 'De/Cr';
+            if(!empty($gl_pre_valance_data))
+            {
+                //echo 'ok';exit;
+                $debit = $gl_pre_valance_data->debit;
+                $credit = $gl_pre_valance_data->credit;
+                if($debit > $credit)
+                {
+                    $PreBalance = $debit - $credit;
+                    $preDebCre = 'De';
+                }else{
+                    $PreBalance = $credit - $debit;
+                    $preDebCre = 'Cr';
+                }
+            }
+
+            if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
+            {
+                //echo 'okk';exit;
+                $general_ledger_infos = DB::table('transactions')
+                    //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
+                    ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                    ->where('transactions.account_no', 'like', $general_ledger.'%')
+                    ->whereBetween('transactions.date', [$date_from, $date_to])
+                    ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
+                    ->get();
+            }else{
+                //echo 'noo';exit;
+                $general_ledger_infos = DB::table('transactions')
+                    //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
+                    ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                    ->whereBetween('transactions.date', [$date_from, $date_to])
+                    ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
+                    ->get();
+            }
+
+        }else{
+            //dd('okk');
+            if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
+            {
+                $gl_pre_valance_data = DB::table('transactions')
+                    ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
+                    ->where('date', '<',$date_from)
+                    ->where('account_no',$general_ledger)
+                    ->groupBy('account_no')
+                    ->first();
+            }else{
+                $gl_pre_valance_data = DB::table('transactions')
+                    ->select('account_no', DB::raw('SUM(debit) as debit, SUM(credit) as credit'))
+                    ->where('date', '<',$date_from)
+                    ->groupBy('account_no')
+                    ->first();
+            }
+            //dd($gl_pre_valance_data);
+
+            $PreBalance=0;
+            $preDebCre = 'De/Cr';
+            if(!empty($gl_pre_valance_data))
+            {
+                //echo 'ok';exit;
+                $debit = $gl_pre_valance_data->debit;
+                $credit = $gl_pre_valance_data->credit;
+                if($debit > $credit)
+                {
+                    $PreBalance = $debit - $credit;
+                    $preDebCre = 'De';
+                }else{
+                    $PreBalance = $credit - $debit;
+                    $preDebCre = 'Cr';
+                }
+            }
+
+
+            if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
+            {
+                //echo 'okk';exit;
+                $general_ledger_infos = DB::table('transactions')
+                    //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
+                    ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                    ->where('transactions.account_no',$general_ledger)
+                    ->whereBetween('transactions.date', [$date_from, $date_to])
+                    ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
+                    ->get();
+            }else{
+                //echo 'noo';exit;
+                $general_ledger_infos = DB::table('transactions')
+                    //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
+                    ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
+                    ->whereBetween('transactions.date', [$date_from, $date_to])
+                    ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
+                    ->get();
             }
         }
 
 
-        if( (!empty($general_ledger)) && (!empty($date_from)) && (!empty($date_to)) )
-        {
-            //echo 'okk';exit;
-            $general_ledger_infos = DB::table('transactions')
-                //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
-                ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
-                ->where('transactions.account_no',$general_ledger)
-                ->whereBetween('transactions.date', [$date_from, $date_to])
-                ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
-                ->get();
-        }else{
-            //echo 'noo';exit;
-            $general_ledger_infos = DB::table('transactions')
-                //->join('accounts', 'transactions.id', '=', 'accounts.user_id')
-                ->leftJoin('accounts', 'transactions.account_no', '=', 'accounts.HeadCode')
-                ->whereBetween('transactions.date', [$date_from, $date_to])
-                ->select('transactions.voucher_type_id','transactions.voucher_no', 'transactions.date', 'transactions.account_no', 'transactions.transaction_description', 'transactions.debit', 'transactions.credit', 'accounts.HeadName', 'accounts.PHeadName', 'accounts.HeadType')
-                ->get();
-        }
 
         //dd($general_ledger_infos);
 
-        return view('backend.account.general_ledger_view', compact('general_ledger_infos','PreBalance', 'preDebCre', 'general_ledger', 'date_from', 'date_to'));
+        return view('backend.account.general_ledger_view', compact('general_ledger_infos','PreBalance', 'preDebCre', 'general_ledger', 'date_from', 'date_to','head_type'));
     }
     public function general_ledger_print($transaction_head,$date_from,$date_to)
     {
