@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        if(Auth::User()->getRoleNames()[0] == "Admin"){
+        if(Auth::User()->getRoleNames()[0] == "Super Admin"){
             $users=User::orderBy('id','DESC')->paginate(5);
         }else{
             $users=User::where('id',Auth::User()->id)->get();
